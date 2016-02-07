@@ -1,0 +1,15 @@
+{
+  "name": "topo-viewer",
+  "version": "0.1.0",
+  "description": "Topology viewer",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "topology",
+    "viewer"
+  ],
+  "author": "Quentin Roy <quentin@quentinroy.fr>",
+  "license": "MIT"
+}
