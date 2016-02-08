@@ -1,25 +1,46 @@
-import isEqual from "lodash-es/isEqual";
-import pick from "lodash-es/pick";
-
-export function group(dictionary, targetProps){
-    const result = [];
-    for(const key in dictionary){
-        // If the grouping should be in accordance with some given target properties
-        // we only consider these properties.
-        const props = targetProps.length ? pick(dictionary[key], targetProps)
-                                         : dictionary[key];
-        // Try to find a column with the props properties.
-        const column = result.find(column => isEqual(column.props, props));
-        // Add this key to this column
-        if(column){
-            column.data.push(key);
-        } else {
-            result.push({ props, data: [key] });
-        }
+class Entry {
+    constructor(id, properties){
+        this.id = id;
+        this.properties = properties;
     }
-    return result;
 }
 
-export default function refTable(references, ...categories){
-    return group(references, categories);
+class HeaderCell {
+    constructor(property, category, parentHeader, subProperties=[], entries=[]){
+        this.property = property;
+        this.category = category;
+        this.parentHeader = parentHeader;
+        [this._subProperty, ...this._subSubProperties] = subProperties;
+        this.addEntries(entries);
+    }
+
+    addEntries(entries){
+        entries.forEach((e) => this.addEntry(e));
+    }
+
+    addEntry(entry){
+        if(this._subProperty){
+            this.subHeaders = this.subHeaders || {};
+            const entryCat = entry.properties[this._subProperty];
+            let subHeader = this.subHeaders[entryCat];
+            if(!subHeader){
+                this.subHeaders[entryCat] = subHeader = new HeaderCell(
+                    this._subProperty, entryCat, this, this._subSubProperties
+                );
+            }
+            subHeader.addEntry(entry);
+        } else {
+            this.entries = this.entries || [];
+            this.entries.push(entry);
+        }
+    }
+}
+
+
+export default function refTable(references, ...properties){
+    const refEntries = Object.keys(references).map((k) => new Entry(
+        k, references[k]
+    ));
+    return new HeaderCell("root", null, null, properties, refEntries);
+    // return group(references, properties);
 }
