@@ -1,5 +1,9 @@
 var path = require("path");
 var webpack = require("webpack");
+var nodeModules = "node_modules";
+var es6modules = ["lodash-es"].map(function(moduleName){
+  return path.join(__dirname, nodeModules, moduleName);
+});
 
 module.exports = {
   entry: {
@@ -14,7 +18,15 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: "babel", include: path.join(__dirname, "src") }
+      { test: /\.js$/, loader: "babel", include: [
+          path.join(__dirname, "src")
+        ].concat(es6modules)
+      }
     ],
   },
+  plugins: [
+        new webpack.ProvidePlugin({
+            'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+        })
+    ]
 };
