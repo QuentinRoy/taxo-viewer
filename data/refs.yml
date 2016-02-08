@@ -1,2 +1,59 @@
-"newman01":
-	"Topic": "CDI Programming"
+Newman2002:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+
+Badam2014:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+
+Houben2015:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+
+Chi2015:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+
+Klokmose2009:
+    Topic: CDI Programming
+    Architecture: Instrumental Interaction
+
+Gjerlufsen2011:
+    Topic: CDI Programming
+    Architecture: Instrumental Interaction
+
+Chen2014:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Parallel
+    Multi-Users: No
+
+Hinckley2003a:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Parallel
+    Multi-Users: Yes
+
+Rekimoto1998:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Sequential
+    Multi-Users: Yes
+
+Rekimoto1997:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Sequential
+    Multi-Users: No
+
+Rekimoto1999:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Separated
+    Multi-Users: No
+
+Jung2008:
+    Topic: Usages
+
+Santosa2013:
+    Topic: Usages
