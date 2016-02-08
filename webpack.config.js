@@ -13,15 +13,15 @@ module.exports = {
   output: {
     path: path.join(__dirname, "assets"),
     filename: "[name].js",
-    publicPath: "assets/",
-    chunkFilename: 'app.[name].js'
+    publicPath: "assets/"
   },
   module: {
     loaders: [
       { test: /\.js$/, loader: "babel", include: [
           path.join(__dirname, "src")
         ].concat(es6modules)
-      }
+      },
+      { test: /\.handlebars$/, loader: 'handlebars-loader' },
     ],
   },
   plugins: [

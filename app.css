@@ -1,0 +1,10 @@
+#ref-table, #ref-table th, #ref-table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#ref-table th, #ref-table td {
+    padding: 0.5em 1em;
+    background-color: #242424;
+    color: white;
+}

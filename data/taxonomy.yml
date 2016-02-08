@@ -1,8 +1,7 @@
-
 Topic:
     - CDI Programming
     - Interaction
-    - Usage Study
+    - Usages
     - Vision
 Interaction Direction:
     - Input
@@ -12,7 +11,7 @@ Input Sequencing:
     - Sequential
     - Parallel
 Architecture:
-    - "Server-based Synchronization",
+    - "Server-based Synchronization"
     - "Instrumental Interaction"
 Output Separation:
     - "Focus & Context"
