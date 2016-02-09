@@ -1,10 +1,24 @@
-#ref-table, #ref-table th, #ref-table td {
-    border: 1px solid black;
+#ref-table {
+    border-bottom: 3px solid black;
+    border-top: 3px solid black;
     border-collapse: collapse;
 }
 
+#ref-table thead {
+    border-bottom: 2px solid black;
+}
+
+#ref-table .hbar {
+    position: absolute;
+    background-color: black;
+    height: 1px;
+    width: calc(100% - 2em);
+    left: 1em;
+    bottom: 0;
+}
+
 #ref-table th, #ref-table td {
+    position: relative;
     padding: 0.5em 1em;
-    background-color: #242424;
-    color: white;
+    text-align: center;
 }

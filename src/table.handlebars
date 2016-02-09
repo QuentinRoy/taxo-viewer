@@ -1,3 +1,23 @@
 <table id="{{id}}">
-    {{> header }}
+    <thead>
+    {{#each headerRows}}
+        <tr>
+        {{#each this}}
+            <th colspan="{{width}}">
+                {{category}}
+                {{#if this.hasMultipleSub}}<div class="hbar"></div>{{/if}}
+            </th>
+        {{/each}}
+        </tr>
+    {{/each}}
+    </thead>
+    <tbody>
+    {{#each bodyRows}}
+        <tr>
+        {{#each this}}
+            <td>{{#if this}}{{id}}{{/if}}</th>
+        {{/each}}
+        </tr>       
+    {{/each}}
+    </tbody>
 </table>

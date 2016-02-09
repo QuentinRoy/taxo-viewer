@@ -48,6 +48,21 @@ export class HeaderCell {
                                : [];
     }
 
+    hasMultipleSub(){
+        return this.subHeaders && Object.keys(this.subHeaders).length > 1;
+    }
+
+    getBottomHeaders(){
+        if(this.isBottomHeader){
+            return [this];
+        } else {
+            return this.getSubHeadersList().reduce(
+                (bottomHeaders, sub) => bottomHeaders.concat(sub.getBottomHeaders()),
+                []
+            );
+        }
+    }
+
     width(){
         if(this.isBottomHeader){
             return 1;
@@ -59,7 +74,7 @@ export class HeaderCell {
     }
 }
 
-function headerCellToRows(headercell, properties, rows=[], level=0){
+function createHeaderRows(headercell, properties, rows=[], level=0){
     const currentRow = rows[level] = rows[level] || [];
     // Fetch the possible categories for the property of the subcells and add the "undefined" category.
     const subCategories = properties.find(
@@ -75,9 +90,22 @@ function headerCellToRows(headercell, properties, rows=[], level=0){
     subcells.filter(
         sc => !sc.isBottomHeader
     ).forEach(
-        (hc) => headerCellToRows(hc, properties, rows, level + 1)
+        (hc) => createHeaderRows(hc, properties, rows, level + 1)
     );
     return rows;
+}
+
+function createBodyRows(headerRows){
+    const bodyRows = [];
+    const bottomHeader = headerRows[headerRows.length - 1];
+    const colNb = bottomHeader.length;
+    bottomHeader.forEach((header, colNum) => {
+        header.entries.forEach((entry, rowNum) => {
+            const row = bodyRows[rowNum] = bodyRows[rowNum] || new Array(colNb).fill(null);
+            row[colNum] = entry;
+        });
+    });
+    return bodyRows;
 }
 
 export default function refTable(references, properties){
@@ -85,7 +113,11 @@ export default function refTable(references, properties){
         k, references[k]
     ));
     const hc = new HeaderCell("root", null, null, properties.map(p => p.name), refEntries);
-    const headerRows = headerCellToRows(hc, properties);
-    return tableTemplate({ id: "ref-table",  headerRows});
+    const headerRows = createHeaderRows(hc, properties);
+    return tableTemplate({
+        id: "ref-table",
+        headerRows,
+        bodyRows: createBodyRows(headerRows)
+    });
     // return group(references, properties);
 }
