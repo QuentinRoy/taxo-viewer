@@ -15,7 +15,7 @@
     {{#each bodyRows}}
         <tr>
         {{#each this}}
-            <td>{{#if this}}{{id}}{{/if}}</th>
+            <td>{{#if this}}{{biblio.authors.0.lastName}} {{biblio.entryTags.year}}{{/if}}</th>
         {{/each}}
         </tr>       
     {{/each}}
