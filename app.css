@@ -22,3 +22,43 @@
     padding: 0.5em 1em;
     text-align: center;
 }
+
+#ref-table a {
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+    text-decoration: none;
+    color: inherit;
+    transition-duration: 0.2s;
+}
+
+#ref-table a:hover {
+    background-color: #E6E6E6;
+    transition-duration: 0;
+}
+
+.tooltipster-ref {
+    border-radius: 5px; 
+    border: 1px solid #404040;
+    background: #EDEDED;
+    color: #404040;
+    box-shadow: 0px 0px 14px rgba(0,0,0,0.3);
+    font-size: 0.8em;
+    text-align: center;
+    max-width: 300px;
+}
+.tooltipster-ref .tooltipster-content {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 8px 10px;
+}
+
+.tooltipster-ref h3 {
+    margin-top: 0;
+}
+
+.tooltipster-ref .authors, .tooltipster-ref .book-title {
+    margin-top: 1em;
+}
+.tooltipster-ref .book-title {
+    font-style: italic;
+}

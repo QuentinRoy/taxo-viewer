@@ -15,9 +15,11 @@
     {{#each bodyRows}}
         <tr>
         {{#each this}}
-            <td>{{#if this}}{{biblio.authors.0.lastName}} {{biblio.entryTags.year}}{{/if}}</th>
+            <td {{#if this}}data-bib-id="{{id}}"{{/if}}><span class="ref-entry">{{#if this}}{{#if url}}<a href={{url}}>{{/if ~}}
+                {{authors/0/lastName}} {{biblio.entryTags.year}}
+            {{#if url ~}}</a>{{/if}}{{/if}}</span></td>
         {{/each}}
-        </tr>       
+        </tr>
     {{/each}}
     </tbody>
 </table>

@@ -1,0 +1,10 @@
+<h3>{{title}}</h3>
+<div class="authors">
+{{#each authors ~}}{{#unless @first}}{{#if @last}} and {{else}}, {{/if ~}}{{/unless ~}}
+    <span class="author-span" title="{{firstName}} {{ lastName }}"><span class="author-first-name">{{ [./initials] firstName }}</span>&nbsp;<span class="author-last-name">{{ lastName }}</span></span>{{/each ~}}
+</div>
+{{#if biblio.entryTags.series}}
+<div class="book-title">{{biblio.entryTags.series}}</div>
+{{else}}{{#if biblio.entryTags.booktitle}}
+<div class="book-title">{{biblio.entryTags.booktitle}}</div>
+{{/if}}{{/if}}

@@ -15,6 +15,9 @@ module.exports = {
     filename: "[name].js",
     publicPath: "assets/"
   },
+  resolve: {
+    modulesDirectories: [ "shim", nodeModules ]
+  },
   module: {
     loaders: [
       { test: /\.js$/, loader: "babel", include: [
@@ -22,6 +25,7 @@ module.exports = {
         ].concat(es6modules)
       },
       { test: /\.handlebars$/, loader: 'handlebars-loader' },
+      { test: /\.css$/, loader: 'style?singleton!css' },
     ],
   },
   plugins: [

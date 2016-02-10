@@ -1,4 +1,4 @@
-import tableTemplate from "./table.handlebars";
+import tableTemplate from "./templates/table.handlebars";
 
 function createHeaderRows(PropertyNode, properties, rows=[], level=0){
     const currentRow = rows[level] = rows[level] || [];
@@ -34,10 +34,10 @@ function createBodyRows(headerRows){
     return bodyRows;
 }
 
-export default function refTable(refEntries, properties){
+export default function refTable(id, refEntries, properties){
     const headerRows = createHeaderRows(refEntries, properties);
     return tableTemplate({
-        id: "ref-table",
+        id: id,
         headerRows,
         bodyRows: createBodyRows(headerRows)
     });

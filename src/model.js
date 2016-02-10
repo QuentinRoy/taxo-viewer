@@ -1,8 +1,32 @@
+function removeEnclosingBraces(str){
+    return str.substring(
+        str[0] === "{" ? 1 : 0,
+        str[str.length - 1] === "}" ? str.length - 1 : str.length
+    )
+}
+
 export class Entry {
     constructor(id, properties, biblio){
         this.id = id;
         this.properties = properties;
         this.biblio = biblio;
+        this.authors = this.biblio.entryTags.author.split(" and ").map((author) => {
+            const [lastName, firstName] = author.split(", ").map(
+                x => removeEnclosingBraces(x).trim()
+            );
+            // console.log({ lastName, firstName });
+            return { lastName, firstName };
+        });
+        this.title = removeEnclosingBraces(this.biblio.entryTags.title);
+        if(this.biblio.entryTags.doi){
+            if(this.biblio.entryTags.doi.startsWith("http")){
+                this.url = this.biblio.entryTags.doi;
+            } else {
+                this.url = "http://dx.doi.org/"+this.biblio.entryTags.doi;
+            }
+        } else {
+            this.url = this.biblio.entryTags.url;
+        }
     }
 }
 
