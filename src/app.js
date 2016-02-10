@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { Entry, PropertyTree } from "./model"
+import { Entry, CategoryTree } from "./model"
 import refTable from "./ref-table";
 import bibtex from "bibtex-parse-js";
 import parseHTML from "./parseHTML";
@@ -23,17 +23,20 @@ Promise.all([
 ]).then((result) => {
     const [biblio, references, propCategories] = result;
     // TODO: Let the user specify this.
-    const targetPropertyNames = ["Topic", "Architecture", "Interaction Direction", "Input Sequencing"];
+    const targetPropertyNames = ["Topic", "Interaction Direction", "Input Sequencing"];
     // Associate each properties with its different categories.
     const targetProperties = targetPropertyNames.map(
-        (name) => ({ name, categories: propCategories[name] })
+        (name) => ({
+            name,
+            categories: propCategories[name]
+        })
     );
     // Create the reference entries.
     const refEntries = Object.keys(references).map((k) => new Entry(
         k, references[k], biblio[k]
     ));
     // Create the property tree.
-    const propTree = new PropertyTree(targetPropertyNames, refEntries);
+    const propTree = new CategoryTree(targetProperties, refEntries);
     // Create the table and append it.
     const tableDOM = parseHTML(refTable("ref-table", propTree, targetProperties))[0];
     document.querySelector(".wrapper").appendChild(tableDOM);

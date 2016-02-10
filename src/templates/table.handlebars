@@ -4,8 +4,8 @@
         <tr>
         {{#each this}}
             <th colspan="{{width}}">
-                {{category}}
-                {{#if this.hasMultipleSub}}<div class="hbar"></div>{{/if}}
+                {{node.category}}
+                {{#if bottomBar}}<div class="hbar"></div>{{/if}}
             </th>
         {{/each}}
         </tr>
