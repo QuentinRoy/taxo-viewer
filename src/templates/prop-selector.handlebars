@@ -1,0 +1,10 @@
+<div class="prop-selector-selection-wrapper">
+    <strong>Selected properties: </strong>{{#each selectedProperties ~}}
+        {{#unless @first}} / {{/unless}}<span class="prop-selector-selection">{{this}}</span>
+    {{/each ~}}
+    </div>
+<div class="prop-selector-av-wrapper">
+    <strong>Available properties: </strong>{{#each availableProperties ~}}
+        {{#unless @first}} / {{/unless}}<span class="prop-selector-av">{{this}}</span>
+    {{/each ~}}
+</div>

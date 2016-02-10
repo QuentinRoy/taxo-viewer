@@ -1,9 +1,12 @@
 var path = require("path");
 var webpack = require("webpack");
 var nodeModules = "node_modules";
+var webModules = "web_modules";
 var es6modules = ["lodash-es"].map(function(moduleName){
   return path.join(__dirname, nodeModules, moduleName);
-});
+}).concat(["tie"].map(function(moduleName){
+  return path.join(__dirname, webModules, moduleName);
+}));
 
 module.exports = {
   entry: {
@@ -16,7 +19,8 @@ module.exports = {
     publicPath: "assets/"
   },
   resolve: {
-    modulesDirectories: [ "shim", nodeModules ]
+    packageMains: ["webpack", "browser", "web", "browserify", ["jam", "main"], "jsnext:main", "main"],
+    modulesDirectories: [ "shim", webModules, nodeModules ]
   },
   module: {
     loaders: [

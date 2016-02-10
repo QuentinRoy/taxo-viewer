@@ -1,7 +1,29 @@
+.table-wrapper, .selector-wrapper {
+    margin: 1em;
+}
+
+.property-selector {
+    padding: .5em 1em;
+    border-radius: 5px;
+    background: #F2F2F2;
+}
+.property-selector .prop-selector-av,  .property-selector .prop-selector-selection{
+    display: inline-block;
+    transition-duration: 0.2s;
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+}
+.property-selector .prop-selector-av:hover,  .property-selector .prop-selector-selection:hover {
+    background-color: #E6E6E6;
+    transition-duration: 0s;
+    cursor: pointer;
+}
+
 #ref-table {
     border-bottom: 3px solid black;
     border-top: 3px solid black;
     border-collapse: collapse;
+    min-width: calc(100%);
 }
 
 #ref-table thead {
@@ -21,6 +43,7 @@
     position: relative;
     padding: 0.5em 1em;
     text-align: center;
+    max-width: 10%;
 }
 
 #ref-table a {
@@ -61,6 +84,7 @@
 .tooltipster-ref .authors, .tooltipster-ref .book-title {
     margin-top: 1em;
 }
+
 .tooltipster-ref .book-title {
     font-style: italic;
 }

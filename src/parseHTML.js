@@ -1,5 +1,0 @@
-export default function parseHTML(str) {
-  const tmp = document.implementation.createHTMLDocument();
-  tmp.body.innerHTML = str;
-  return tmp.body.children;
-}
