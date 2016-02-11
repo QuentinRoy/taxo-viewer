@@ -1,25 +1,25 @@
 <table id="{{id}}">
     <thead>
-    {{#each headerRows}}
+    {{~#each headerRows}}
         <tr>
-        {{#each this}}
+        {{~#each this}}
             <th colspan="{{width}}">
-                {{#if node}}{{#if node.category}}{{node.category}}{{else}}<span class="na">NA</span>{{/if}}{{/if}}
-                {{#if bottomBar}}<div class="hbar"></div>{{/if}}
+                {{~#if node}}{{#if node.category}}{{node.category}}{{else}}<span class="na">NA</span>{{/if}}{{/if}}
+                {{~#if bottomBar}}<div class="hbar"></div>{{/if~}}
             </th>
-        {{/each}}
+        {{~/each}}
         </tr>
     {{/each}}
     </thead>
     <tbody>
     {{#each bodyRows}}
         <tr>
-        {{#each this}}
+        {{~#each this}}
             <td {{#if this}}data-bib-id="{{id}}"{{/if}}><span class="ref-entry">{{#if this}}{{#if url}}<a href={{url}}>{{/if ~}}
                 {{authors/0/lastName}} {{biblio.entryTags.year}}
-            {{#if url ~}}</a>{{/if}}{{/if}}</span></td>
-        {{/each}}
+            {{~#if url ~}}</a>{{/if}}{{/if}}</span></td>
+        {{~/each}}
         </tr>
-    {{/each}}
+    {{~/each}}
     </tbody>
 </table>
