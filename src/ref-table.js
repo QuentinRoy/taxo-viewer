@@ -42,7 +42,7 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
     let subcells = subCategories.map(
         (subcat) => categoryNode.subCategories && categoryNode.subCategories[subcat]
     ).filter(c => !!c);
-    // Add the subcells of unknown category.
+    // Add the subcells of unknown category (i.e. the subcells that are not already in the subcells array).
     subcells.push(...categoryNode.getSubCategoriesList().filter(sp => subcells.indexOf(sp) < 0));
 
     // Reapply for all subcells that are a leaf.
@@ -60,12 +60,13 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
             }
             colNum += width;
         });
+    // In case of only an undefined category, just create the subHeaders but do not add it.
     } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories
                                          && !categoryNode.subCategories["undefined"].isLeaf){
-        // In case of only an undefined category, just create the subHeaders but do not add it.
         createHeaderRows(categoryNode.subCategories["undefined"], properties, rows, currentRowNum, currentColNum);
+
+    // If nothing has been added to the row and it is only filled with fillers, removes it.
     } else if(currentRow.every(c => c.isFiller)){
-        // If nothing has been added to the row and it is only filled with fillers, removes it.
         rows.splice(currentRowNum, 1);
     }
 
@@ -82,20 +83,26 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
 
 function createBodyRows(headerRows){
     const bodyRows = [];
-    // Spread the headers so that a header of width 3 will be cloned in 3 consecutive cell.
+    // Spread the headers so that a header of width 3 will be cloned in 3 consecutive cells.
     const spreadedHeaders = headerRows.map(row => row.reduce(
         (newRow, c) => newRow.concat(new Array(c.width).fill(c)), []
-    ))
+    ));
+
+    const rowNb = spreadedHeaders.length;
+    const colNb = spreadedHeaders[0].length;
+
     // For each column, retrieve the lowest non filler cell.
-    const bottomHeaders = spreadedHeaders.reduce(
-        (r1, r2) => r2.map(
-            (ci2, ci) => {
-                const ci1 = r1[ci];
-                return ci2.isFiller ? ci1 : ci2;
+    const bottomHeaders = [];
+    for(let colI = 0; colI < colNb; colI++){
+        for(let rowI = rowNb - 1; rowI >= 0; rowI--){
+            const cell = spreadedHeaders[rowI][colI];
+            if(!cell.isFiller){
+                bottomHeaders.push(cell);
+                break;
             }
-        )
-    );
-    const colNb = bottomHeaders.length;
+        }
+    }
+
     bottomHeaders.forEach((header, colNum) => {
         if(header.node && header.node.entries){
             header.node.entries.sort(
