@@ -38,7 +38,7 @@ export class CategoryNode {
         this.category = category;
         this.parent = parent;
         // Remove the head subproperties that are invalid (i.e. this does not complies
-        // with the property's parent). 
+        // with the property's parent).
         const nextValidProp = subProperties.findIndex(sp => this.isValidForProp(sp));
         this.subProperties = nextValidProp < 0 ? [] : subProperties.slice(nextValidProp);
         this.entries = [];
@@ -89,8 +89,8 @@ export class CategoryNode {
         }
         this.entries.push(entry);
         if(this.subProperties.length){
-            const entryCats = entry.properties[this.subProperties[0].name];
-            (Array.isArray(entryCats) ? entryCats : [entryCats]).forEach(entryCat => {
+            const entryCats = entry.properties[this.subProperties[0].name] || [undefined];
+            entryCats.forEach(entryCat => {
                 if(!(entryCat in this.subCategories)){
                     this._addSubCategory(entryCat);
                 }

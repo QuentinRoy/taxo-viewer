@@ -1,27 +1,56 @@
 Newman2002:
     Topic: CDI Programming
-    Architecture: Server-based Synchronization
+    Architecture: Ad-Hoc
+    Synchronization: No Synchro
+    Adaptation: No Adaptation
 
 Badam2014:
     Topic: CDI Programming
     Architecture: Server-based Synchronization
+    Adaptation: No Adaptation
+    Synchronization: Data Synchro
 
 Houben2015:
     Topic: [CDI Programming, Interaction]
     Architecture: Server-based Synchronization
     Interaction Direction: [Output, Input]
+    Output Separation:
+        - Focus & Context
+        - Object & Widgets
+    Input Sequencing: Parallel
+    Device:
+        - Watch
+        - TouchScreen
+    Watch Sensor:
+        - Touch
+        - Proximity
+        - Accelerometer
+    Synchronization:
+        - Data Synchro
+        - Event Merging
+    Task:
+        - Data Transfer
+        - Authentication
+        - Map Navigation
+        - Active Reading
+        - UI Beaming
 
 Chi2015:
     Topic: CDI Programming
     Architecture: Server-based Synchronization
+    Synchronization:
+        - Data Synchro
+        - Event Merging
 
 Klokmose2009:
     Topic: CDI Programming
     Architecture: Instrumental Interaction
+    Sharing: Data Sharing
 
 Gjerlufsen2011:
     Topic: CDI Programming
     Architecture: Instrumental Interaction
+    Sharing: Data Sharing
 
 Chen2014:
     Topic: Interaction

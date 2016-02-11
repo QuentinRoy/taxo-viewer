@@ -2,25 +2,27 @@ import yaml from "js-yaml";
 import { Entry, CategoryTree } from "./model"
 import refTable from "./ref-table";
 import bibtex from "bibtex-parse-js";
-import { parseHTML, docLoadedPromise, objEntries, strReplaceAll } from "./utils";
+import { parseHTML, docLoadedPromise, strReplaceAll } from "./utils";
 import tooltip from "./tooltip";
 import tooltipTemplate from "./templates/tooltip.handlebars";
 import tie from "tie";
 import PropSelector from "./prop-selector";
 import querystring from "querystring";
 import isEqual from "lodash-es/isEqual";
+import mapValues from "lodash-es/mapValues";
 
 const normalizeProperty = (pName, p) => {
     p = Array.isArray(p) ? { categories: p } : p ? p
                                                  : { categories: [] };
     return Object.assign(p, { name: pName });
 }
-const normalizeProperties = properties => objEntries(properties).reduce(
-    (result, [pName, p]) => Object.assign(result, { [pName]: normalizeProperty(pName, p) }),
-    {}
+const normalizeProperties = properties => mapValues(properties,
+    (p, pName) => normalizeProperty(pName, p)
 );
+const normalizeRefs = refs => mapValues(refs, r => normalizeRef(r));
+const normalizeRef = ref => mapValues(ref, p => Array.isArray(p) ? p : [p]);
 const biblioListToDict = bibEntries => bibEntries.reduce(
-    (bibDict, e) => Object.assign(bibDict, { [e.citationKey]: e }),
+    (bibDict, e) => Object.assign(bibDict, {[e.citationKey]: e}),
     {}
 );
 
@@ -33,7 +35,7 @@ Promise.all([
     ),
     // Fetch the reference data and load it as json.
     fetch("data/refs.yml").then(res => res.text()).then(
-        yml => yaml.safeLoad(yml)
+        yml => normalizeRefs(yaml.safeLoad(yml))
     ),
     // Fetch the taxonomy data, load it as json and normalize it.
     fetch("data/taxonomy.yml").then(res => res.text()).then(
