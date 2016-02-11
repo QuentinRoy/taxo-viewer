@@ -7,8 +7,9 @@ Badam2014:
     Architecture: Server-based Synchronization
 
 Houben2015:
-    Topic: CDI Programming
+    Topic: [CDI Programming, Interaction]
     Architecture: Server-based Synchronization
+    Interaction Direction: [Output, Input]
 
 Chi2015:
     Topic: CDI Programming

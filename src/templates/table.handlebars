@@ -4,7 +4,7 @@
         <tr>
         {{#each this}}
             <th colspan="{{width}}">
-                {{node.category}}
+                {{#if node}}{{#if node.category}}{{node.category}}{{else}}<span class="na">NA</span>{{/if}}{{/if}}
                 {{#if bottomBar}}<div class="hbar"></div>{{/if}}
             </th>
         {{/each}}

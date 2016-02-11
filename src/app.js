@@ -10,11 +10,13 @@ import PropSelector from "./prop-selector";
 import querystring from "querystring";
 import isEqual from "lodash-es/isEqual";
 
-const normalizeProperty = p => Array.isArray(p) ? { categories: p }
-                                                : p ? p
-                                                    : { categories: [] };
+const normalizeProperty = (pName, p) => {
+    p = Array.isArray(p) ? { categories: p } : p ? p
+                                                 : { categories: [] };
+    return Object.assign(p, { name: pName });
+}
 const normalizeProperties = properties => objEntries(properties).reduce(
-    (result, [pName, p]) => Object.assign(result, { [pName]: normalizeProperty(p) }),
+    (result, [pName, p]) => Object.assign(result, { [pName]: normalizeProperty(pName, p) }),
     {}
 );
 const biblioListToDict = bibEntries => bibEntries.reduce(
@@ -64,10 +66,7 @@ Promise.all([
 
     // Associate each properties with its different categories.
     const targetProperties = tie(() => targetPropertiesNames.get().map(
-        (name) => ({
-            name,
-            categories: properties.get()[name].categories || []
-        })
+        (name) => properties.prop(name).get()
     ));
 
     const categoryNames = tie(() => Object.keys(properties.get()));

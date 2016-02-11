@@ -5,14 +5,14 @@ Topic:
     - Vision
 
 Interaction Direction:
-    parent:
+    parents:
         Topic: Interaction
     categories:
         - Input
         - Output
 
 Input Sequencing:
-    parent:
+    parents:
         Interaction Direction: Input
     categories:
         - Separated
@@ -20,14 +20,14 @@ Input Sequencing:
         - Parallel
 
 Architecture:
-    parent:
+    parents:
         Topic: CDI Programming
     categories:
         - "Server-based Synchronization"
         - "Instrumental Interaction"
 
 Output Separation:
-    parent:
+    parents:
         Input Direction: Output
     categories:
         - "Focus & Context"

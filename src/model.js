@@ -1,4 +1,5 @@
 import objValues from "lodash-es/values";
+import { objEntries } from "./utils";
 
 function removeEnclosingBraces(str){
     return str.substring(
@@ -32,14 +33,32 @@ export class Entry {
 }
 
 export class CategoryNode {
-    constructor(property, category, parentHeader, subProperties=[], entries=[]){
+    constructor(property, category, parent, subProperties=[], entries=[]){
         this.property = property;
         this.category = category;
-        this.parentHeader = parentHeader;
-        this.subProperties = subProperties;
+        this.parent = parent;
+        // Remove the head subproperties that are invalid (i.e. this does not complies
+        // with the property's parent). 
+        const nextValidProp = subProperties.findIndex(sp => this.isValidForProp(sp));
+        this.subProperties = nextValidProp < 0 ? [] : subProperties.slice(nextValidProp);
         this.entries = [];
         this.subCategories = null;
         this.addEntries(entries);
+    }
+
+    isValidForProp(prop){
+        if(prop.parents){
+            const thisIsValid = objEntries(prop.parents).some(
+                ([parentName, value]) => this.property.name === parentName && this.category === value
+            );
+            if(thisIsValid){
+                return true
+            } else {
+                return Boolean(this.parent && this.parent.isValidForProp(prop))
+            }
+        } else {
+            return true;
+        }
     }
 
     addEntries(entries){
@@ -48,7 +67,7 @@ export class CategoryNode {
 
     _createSubCategories(){
         this.subCategories = this.subCategories || {};
-        const directSub = this.subProperties[0]
+        const directSub = this.subProperties[0];
         if(directSub && directSub.categories){
             directSub.categories.forEach(c => this._addSubCategory(c));
         }

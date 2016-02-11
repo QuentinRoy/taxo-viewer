@@ -69,14 +69,6 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
     } else if(currentRow.every(c => c.isFiller)){
         rows.splice(currentRowNum, 1);
     }
-
-    // Make sure each sub rows has the proper length.
-    const rowWidth = rows[0].reduce((acc, c) => acc + c.width, 0);
-    const colHeight = rows.length;
-    for(let rowNum=Math.max(currentRowNum, 1); rowNum < colHeight; rowNum++){
-        const currentWidth = rows[rowNum].reduce((acc, c) => acc + c.width, 0);
-        rows[rowNum].push(...new Array(rowWidth - currentWidth).fill({ width: 1, isFiller: true }));
-    }
     return rows;
 }
 
@@ -96,7 +88,7 @@ function createBodyRows(headerRows){
     for(let colI = 0; colI < colNb; colI++){
         for(let rowI = rowNb - 1; rowI >= 0; rowI--){
             const cell = spreadedHeaders[rowI][colI];
-            if(!cell.isFiller){
+            if(cell && !cell.isFiller){
                 bottomHeaders.push(cell);
                 break;
             }
