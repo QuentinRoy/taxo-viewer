@@ -33,9 +33,10 @@ function hasBottomBar(node){
 
 function createHeaderRows(categoryNode, properties, rows=[], rowNum=0, colNum=0){
     const currentRow = rows[rowNum] = rows[rowNum] || new Array(colNum).fill({ width: 1, filler: true });
-    // Fetch the possible categories for the property of the subcells and add the "undefined" category.
+    // Fetch the possible sub categories for the subproperty of the categoryNode and add the "undefined" category.
+    const directSub = categoryNode.subProperties[0];
     const subCategories = properties.find(
-        p => p.name === categoryNode.subProperties[0].name
+        p => p.name === directSub.name
     ).categories.concat(["undefined"]);
     // Fetch the subcells in category order.
     let subcells = subCategories.map(

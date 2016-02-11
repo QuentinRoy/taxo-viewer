@@ -22,9 +22,8 @@ Devices:
     - Band
     - Stone
 Sensor:
-    - Accelerometer
-    - Touch
-    - Microphone
+
 Multi-Users:
-    - No
-    - Yes
+    - Single-User
+    - Multi-Users
+Task:

@@ -26,31 +26,31 @@ Chen2014:
     Topic: Interaction
     Interaction Direction: Input
     Input Sequencing: Parallel
-    Multi-Users: No
+    Multi-Users: Single-User
 
 Hinckley2003a:
     Topic: Interaction
     Interaction Direction: Input
     Input Sequencing: Parallel
-    Multi-Users: Yes
+    Multi-Users: Multi-Users
 
 Rekimoto1998:
     Topic: Interaction
     Interaction Direction: Input
     Input Sequencing: Sequential
-    Multi-Users: Yes
+    Multi-Users: Multi-Users
 
 Rekimoto1997:
     Topic: Interaction
     Interaction Direction: Input
     Input Sequencing: Sequential
-    Multi-Users: No
+    Multi-Users: Single-User
 
 Rekimoto1999:
     Topic: Interaction
     Interaction Direction: Input
     Input Sequencing: Separated
-    Multi-Users: No
+    Multi-Users: Single-User
 
 Jung2008:
     Topic: Usages

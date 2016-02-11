@@ -37,7 +37,7 @@ export class CategoryNode {
         this.parentHeader = parentHeader;
         this.subProperties = subProperties;
         this.entries = [];
-        this.subCategories = null;
+        this.subCategories = {};
         if(this.subProperties.length){
             this._addAllSubCategories();
         }
@@ -49,11 +49,13 @@ export class CategoryNode {
     }
 
     _addAllSubCategories(){
-        this.subProperties[0].categories.forEach(c => this._addSubCategory(c));
+        const directSub = this.subProperties[0]
+        if(directSub && directSub.categories){
+            directSub.categories.forEach(c => this._addSubCategory(c));
+        }
     }
 
     _addSubCategory(categoryName){
-        this.subCategories = this.subCategories || {};
         const [subProperty, ...subSubProperties] = this.subProperties;
         this.subCategories[categoryName] = new CategoryNode(
             subProperty, categoryName, this, subSubProperties

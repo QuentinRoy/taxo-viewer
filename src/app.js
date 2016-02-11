@@ -31,7 +31,7 @@ Promise.all([
     const targetProperties = tie(() => targetPropertyNames.get().map(
         (name) => ({
             name,
-            categories: propCategories.prop(name).get()
+            categories: propCategories.prop(name).get() || []
         })
     ));
 
