@@ -7,4 +7,9 @@
 <div class="book-title">{{biblio.entryTags.series}}</div>
 {{else}}{{#if biblio.entryTags.booktitle}}
 <div class="book-title">{{biblio.entryTags.booktitle}}</div>
-{{/if}}{{/if}}
+{{else}}{{#if biblio.entryTags.journal}}
+<div class="book-title">
+    {{~biblio.entryTags.journal}}
+    {{~#if biblio.entryTags.volume}}, Vol. {{biblio.entryTags.volume}}{{/if~}}
+</div>
+{{~/if}}{{/if}}{{/if}}

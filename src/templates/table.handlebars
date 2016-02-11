@@ -16,7 +16,7 @@
         <tr>
         {{~#each this}}
             <td {{#if this}}data-bib-id="{{id}}"{{/if}}><span class="ref-entry">{{#if this}}{{#if url}}<a href={{url}}>{{/if ~}}
-                {{authors/0/lastName}} {{biblio.entryTags.year}}
+                <span class="ref-content">{{authors/0/lastName}} {{biblio.entryTags.year}}</span>
             {{~#if url ~}}</a>{{/if}}{{/if}}</span></td>
         {{~/each}}
         </tr>
