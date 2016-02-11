@@ -48,11 +48,16 @@ Output Separation:
     parents:
         Interaction Direction: Output
     categories:
-        - "Focus & Context"
+        - Focus & Context
+        - Object & Widgets
+        - Extension
 
 Device:
-    - Watch
+    - Computer
+    - Phone
     - TouchScreen
+    - Tablet
+    - Watch
 
 Watch Sensor:
     parents:
