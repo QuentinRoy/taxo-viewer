@@ -68,11 +68,13 @@ export class CategoryNode {
         }
         this.entries.push(entry);
         if(this.subProperties.length){
-            const entryCat = entry.properties[this.subProperties[0].name];
-            if(!(entryCat in this.subCategories)){
-                this._addSubCategory()
-            }
-            this.subCategories[entryCat].addEntry(entry);
+            const entryCats = entry.properties[this.subProperties[0].name];
+            (Array.isArray(entryCats) ? entryCats : [entryCats]).forEach(entryCat => {
+                if(!(entryCat in this.subCategories)){
+                    this._addSubCategory()
+                }
+                this.subCategories[entryCat].addEntry(entry);
+            });
         }
     }
 

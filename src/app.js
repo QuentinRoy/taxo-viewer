@@ -59,12 +59,16 @@ Promise.all([
         previousDOM = tableDOM.get();
         // Associate each entry with its dom and create the tooltips.
         for(const entry of refEntries.get()){
-            entry.dom = tableDOM.get().querySelector(`[data-bib-id=${entry.id}] .ref-entry`);
-            entry.tooltip = tooltip(entry.dom, {
-                content: tooltipTemplate(entry),
-                position: "bottom",
-                delay: 0
-            })
+            entry.doms = Array.from(
+                tableDOM.get().querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
+            );
+            for(const dom of entry.doms){
+                entry.tooltip = tooltip(dom, {
+                    content: tooltipTemplate(entry),
+                    position: "bottom",
+                    delay: 0
+                });
+            }
         }
     });
 }).catch((err) => {
