@@ -55,7 +55,7 @@
     transition-duration: 0.2s;
 }
 
-#ref-table a:hover {
+#ref-table .highlighted a {
     background-color: #CCE5FF;
     color: #001021;
     transition-duration: 0s;

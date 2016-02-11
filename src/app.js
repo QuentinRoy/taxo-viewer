@@ -84,17 +84,18 @@ Promise.all([
     // Create the table and append it.
     const tableDOM = tie(() => parseHTML(refTable("ref-table", propTree.get(), targetProperties.get()))[0]);
 
-    let previousDOM = null;
+    let cacheddom = null;
     tie.liven(()=>{
-        if(previousDOM){
-            previousDOM.parentNode.removeChild(previousDOM);
+        if(cacheddom){
+            cacheddom.parentNode.removeChild(cacheddom);
         }
         document.querySelector(".table-wrapper").appendChild(tableDOM.get());
-        previousDOM = tableDOM.get();
+        cacheddom = tableDOM.get();
+
         // Associate each entry with its dom and create the tooltips.
         for(const entry of refEntries.get()){
             entry.doms = Array.from(
-                tableDOM.get().querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
+                cacheddom.querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
             );
             for(const dom of entry.doms){
                 entry.tooltip = tooltip(dom, {
@@ -102,8 +103,15 @@ Promise.all([
                     position: "bottom",
                     delay: 0
                 });
+                dom.addEventListener("mouseover", () => {
+                    entry.doms.forEach(d => d.classList.add("highlighted"));
+                });
+                dom.addEventListener("mouseout", () => {
+                    entry.doms.forEach(d => d.classList.remove("highlighted"));
+                });
             }
         }
+
     });
 }).catch((err) => {
     if(err.message){
