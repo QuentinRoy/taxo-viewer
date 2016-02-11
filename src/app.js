@@ -2,34 +2,37 @@ import yaml from "js-yaml";
 import { Entry, CategoryTree } from "./model"
 import refTable from "./ref-table";
 import bibtex from "bibtex-parse-js";
-import { parseHTML, docLoadedPromise } from "./utils";
+import { parseHTML, docLoadedPromise, objEntries } from "./utils";
 import tooltip from "./tooltip";
 import tooltipTemplate from "./templates/tooltip.handlebars";
 import tie from "tie";
 import PropSelector from "./prop-selector";
 
+const normalizeProperty = p => Array.isArray(p) ? { categories: p }
+                                                : p ? p
+                                                    : { categories: [] };
+const normalizeProperties = properties => objEntries(properties).reduce(
+    (result, [pName, p]) => Object.assign(result, { [pName]: normalizeProperty(p) }),
+    {}
+);
+const biblioListToDict = bibEntries => bibEntries.reduce(
+    (bibDict, e) => Object.assign(bibDict, { [e.citationKey]: e }),
+    {}
+);
+
 Promise.all([
-    // Fetch the bibliography and parses it
+    // Fetch the bibliography and parses it.
     fetch("data/biblio.bib").then(res => res.text()).then(
-        bib => bibtex.toJSON(bib).reduce((dict, entry) => {
-            dict[entry.citationKey] = entry;
-            return dict;
-        }, {})
+        bib => biblioListToDict(bibtex.toJSON(bib))
     ),
     // Fetch the reference data and load it as json.
-    fetch("data/refs.yml").then(res => res.text()).then(yml => yaml.safeLoad(yml)),
-    // Fetch the taxonomy data and load it as json.
-    fetch("data/taxonomy.yml").then(res => res.text()).then(ymlTxt => {
-        const unformatedProperties = yaml.safeLoad(ymlTxt);
-        const result = {};
-        Object.keys(unformatedProperties).forEach((pName) => {
-            const p = unformatedProperties[pName];
-            result[pName] = Array.isArray(p) ? { categories: p }
-                                             : p ? p
-                                                 : { categories: [] }
-        });
-        return result;
-    }),
+    fetch("data/refs.yml").then(res => res.text()).then(
+        yml => yaml.safeLoad(yml)
+    ),
+    // Fetch the taxonomy data, load it as json and normalize it.
+    fetch("data/taxonomy.yml").then(res => res.text()).then(
+        ymlTxt => normalizeProperties(yaml.safeLoad(ymlTxt))
+    ),
     // Also wait for the document to be loaded.
     docLoadedPromise
 ]).then((results) => {
@@ -52,9 +55,7 @@ Promise.all([
     // Create the reference entries.
     const refEntries = tie(() => {
         const refs = references.get(), bib = biblio.get();
-        return Object.keys(refs).map((k) => new Entry(
-            k, refs[k], bib[k]
-        ))
+        return Object.keys(refs).map(k => new Entry(k, refs[k], bib[k]));
     });
     // Create the property tree.
     const propTree = tie(() => new CategoryTree(targetProperties.get(), refEntries.get()));

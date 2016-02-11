@@ -23,3 +23,11 @@ export const docLoadedPromise = new Promise(resolve => {
         document.addEventListener('readystatechange', handler);
         handler();
 });
+
+export function objEntries(obj){
+    return Object.keys(obj).map(k => [k, obj[k]]);
+}
+
+export function objValues(obj){
+    return Object.keys(obj).map(k => obj[k]);
+}

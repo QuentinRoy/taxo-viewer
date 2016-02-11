@@ -1,3 +1,5 @@
+import { objValues } from "./utils";
+
 function removeEnclosingBraces(str){
     return str.substring(
         str[0] === "{" ? 1 : 0,
@@ -87,7 +89,7 @@ export class CategoryNode {
     }
 
     getSubCategoriesList(){
-        return this.subCategories ? Object.keys(this.subCategories).map((k) => this.subCategories[k])
+        return this.subCategories ? objValues(this.subCategories)
                                   : [];
     }
 }
