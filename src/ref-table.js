@@ -31,8 +31,10 @@ function hasBottomBar(node){
     }
 }
 
-function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, currentColNum=0){
-    const currentRow = rows[currentRowNum] = rows[currentRowNum] || new Array(currentColNum).fill({ width: 1, isFiller: true });
+function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, currentColNum=0, checkWidth=true){
+    const currentRow = rows[currentRowNum] = rows[currentRowNum] || [];
+    fillRow(currentRow, currentColNum - getRowWidth(currentRow), { width: 1, isFiller: true });
+
     // Fetch the possible sub categories for the subproperty of the categoryNode and add the "undefined" category.
     const directSub = categoryNode.subProperties[0];
     const subCategories = properties.find(
@@ -56,21 +58,38 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
                 bottomBar: hasBottomBar(node)
             });
             if(!node.isLeaf){
-                createHeaderRows(node, properties, rows, currentRowNum + 1, colNum);
+                createHeaderRows(node, properties, rows, currentRowNum + 1, colNum, false);
             }
             colNum += width;
         });
     // In case of only an undefined category, just create the subHeaders but do not add it.
     } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories
                                          && !categoryNode.subCategories["undefined"].isLeaf){
-        createHeaderRows(categoryNode.subCategories["undefined"], properties, rows, currentRowNum, currentColNum);
+        createHeaderRows(categoryNode.subCategories["undefined"], properties, rows, currentRowNum, currentColNum, false);
 
     // If nothing has been added to the row and it is only filled with fillers, removes it.
     } else if(currentRow.every(c => c.isFiller)){
         rows.splice(currentRowNum, 1);
     }
+
+    // Make sure all rows are full or it is buggy on safari.
+    if(checkWidth){
+        const rowWidth = getRowWidth(rows[0]);
+        rows.slice(1).forEach(thisRow => {
+            fillRow(thisRow, rowWidth - getRowWidth(thisRow), {
+                width: 1, isFiller: true
+            });
+        });
+    }
     return rows;
 }
+
+const getRowWidth = (row) => row.reduce((acc, cell) => acc + cell.width || 0, 0);
+const fillRow = (row, nb, filler=null) => {
+    if(nb > 0){
+        row.push(...new Array(nb).fill(filler));
+    }
+} 
 
 
 function createBodyRows(headerRows){
