@@ -1,7 +1,7 @@
 import tableTemplate from "./templates/table.handlebars";
 
 function getCellWidth(categoryNode){
-    if(categoryNode.isLeave){
+    if(categoryNode.isLeaf){
         return 1;
     } else {
         const subs = categoryNode.getSubCategoriesList();
@@ -42,10 +42,10 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
     let subcells = subCategories.map(
         (subcat) => categoryNode.subCategories && categoryNode.subCategories[subcat]
     ).filter(c => !!c);
-    // Add the subcells of unknown category
+    // Add the subcells of unknown category.
     subcells.push(...categoryNode.getSubCategoriesList().filter(sp => subcells.indexOf(sp) < 0));
 
-    // Reapply for all subcells that are not at the bottom of the header
+    // Reapply for all subcells that are a leaf.
     if(!subcells.every(sc => sc.isEmpty() || !sc.category)){
         let colNum = currentColNum;
         subcells.forEach((node) => {
@@ -55,13 +55,13 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
                 width,
                 bottomBar: hasBottomBar(node)
             });
-            if(!node.isLeave){
+            if(!node.isLeaf){
                 createHeaderRows(node, properties, rows, currentRowNum + 1, colNum);
             }
             colNum += width;
         });
     } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories
-                                         && !categoryNode.subCategories["undefined"].isLeave){
+                                         && !categoryNode.subCategories["undefined"].isLeaf){
         // In case of only an undefined category, just create the subHeaders but do not add it.
         createHeaderRows(categoryNode.subCategories["undefined"], properties, rows, currentRowNum, currentColNum);
     } else if(currentRow.every(c => c.isFiller)){

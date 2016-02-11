@@ -76,7 +76,7 @@ export class CategoryNode {
         }
     }
 
-    get isLeave(){
+    get isLeaf(){
         return !this.subProperties.length;
     }
 
