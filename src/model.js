@@ -1,4 +1,4 @@
-import { objValues } from "./utils";
+import objValues from "lodash-es/values";
 
 function removeEnclosingBraces(str){
     return str.substring(

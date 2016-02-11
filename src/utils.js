@@ -28,10 +28,6 @@ export function objEntries(obj){
     return Object.keys(obj).map(k => [k, obj[k]]);
 }
 
-export function objValues(obj){
-    return Object.keys(obj).map(k => obj[k]);
-}
-
 export function strReplaceAll(target, search, replacement){
     return target.replace(new RegExp(search, 'g'), replacement);
 }

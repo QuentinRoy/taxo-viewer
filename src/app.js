@@ -8,6 +8,7 @@ import tooltipTemplate from "./templates/tooltip.handlebars";
 import tie from "tie";
 import PropSelector from "./prop-selector";
 import querystring from "querystring";
+import isEqual from "lodash-es/isEqual";
 
 const normalizeProperty = p => Array.isArray(p) ? { categories: p }
                                                 : p ? p
@@ -45,6 +46,22 @@ Promise.all([
         urlParams.properties ? strReplaceAll(urlParams.properties, "_", " ").split(',')
                              : ["Topic", "Interaction Direction", "Input Sequencing"]
     );
+
+    // Manage the history state and the url.
+    const propQuery = tie(() => strReplaceAll(targetPropertiesNames.get().join(","), " ", "_"));
+    targetPropertiesNames.onChange((properties)=>{
+        const stateProp = window.history.state && window.history.state.properties;
+        if(!isEqual(stateProp, properties)){
+            window.history.pushState({
+                properties: properties.slice()
+            }, null, "?properties="+propQuery.get());
+        }
+    });
+    window.history.replaceState({
+        properties: targetPropertiesNames.get().slice()
+    }, null, "?properties="+propQuery.get());
+    window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
+
     // Associate each properties with its different categories.
     const targetProperties = tie(() => targetPropertiesNames.get().map(
         (name) => ({
