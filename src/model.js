@@ -88,17 +88,6 @@ export class CategoryNode {
         return this.subCategories ? Object.keys(this.subCategories).map((k) => this.subCategories[k])
                                   : [];
     }
-
-    getLeaves(){
-        if(this.isLeave){
-            return [this];
-        } else {
-            return this.getSubCategoriesList().reduce(
-                (bottomHeaders, sub) => bottomHeaders.concat(sub.getLeaves()),
-                []
-            );
-        }
-    }
 }
 
 export class CategoryTree extends CategoryNode {
