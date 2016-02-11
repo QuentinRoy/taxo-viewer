@@ -14,7 +14,6 @@ export class Entry {
             const [lastName, firstName] = author.split(", ").map(
                 x => removeEnclosingBraces(x).trim()
             );
-            // console.log({ lastName, firstName });
             return { lastName, firstName };
         });
         this.title = removeEnclosingBraces(this.biblio.entryTags.title);
@@ -37,10 +36,7 @@ export class CategoryNode {
         this.parentHeader = parentHeader;
         this.subProperties = subProperties;
         this.entries = [];
-        this.subCategories = {};
-        if(this.subProperties.length){
-            this._addAllSubCategories();
-        }
+        this.subCategories = null;
         this.addEntries(entries);
     }
 
@@ -48,7 +44,8 @@ export class CategoryNode {
         entries.forEach((e) => this.addEntry(e));
     }
 
-    _addAllSubCategories(){
+    _createSubCategories(){
+        this.subCategories = this.subCategories || {};
         const directSub = this.subProperties[0]
         if(directSub && directSub.categories){
             directSub.categories.forEach(c => this._addSubCategory(c));
@@ -56,6 +53,9 @@ export class CategoryNode {
     }
 
     _addSubCategory(categoryName){
+        if(categoryName in this.subCategories){
+            return;
+        }
         const [subProperty, ...subSubProperties] = this.subProperties;
         this.subCategories[categoryName] = new CategoryNode(
             subProperty, categoryName, this, subSubProperties
@@ -63,6 +63,9 @@ export class CategoryNode {
     }
 
     addEntry(entry){
+        if(!this.subCategories){
+            this._createSubCategories();
+        }
         this.entries.push(entry);
         if(this.subProperties.length){
             const entryCat = entry.properties[this.subProperties[0].name];

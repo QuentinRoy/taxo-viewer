@@ -40,7 +40,7 @@ function createHeaderRows(categoryNode, properties, rows=[], rowNum=0, colNum=0)
     ).categories.concat(["undefined"]);
     // Fetch the subcells in category order.
     let subcells = subCategories.map(
-        (subcat) => categoryNode.subCategories[subcat]
+        (subcat) => categoryNode.subCategories && categoryNode.subCategories[subcat]
     ).filter(c => !!c);
     // Add the subcells of unknown category
     subcells.push(...categoryNode.getSubCategoriesList().filter(sp => subcells.indexOf(sp) < 0));
@@ -61,7 +61,7 @@ function createHeaderRows(categoryNode, properties, rows=[], rowNum=0, colNum=0)
     // Reapply for all subcells that are not at the bottom of the header
     if(!subcells.every(sc => sc.isEmpty() || !sc.category)){
         subcells.forEach(addSubHeaderRow);
-    } else if("undefined" in categoryNode.subCategories){
+    } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories){
         // In case of undefined category, add it only if it is a leave
         const undefCat = categoryNode.subCategories["undefined"];
         if(!undefCat.isLeave){
