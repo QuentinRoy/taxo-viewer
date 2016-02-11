@@ -19,38 +19,49 @@ Promise.all([
     // Fetch the reference data and load it as json.
     fetch("data/refs.yml").then(res => res.text()).then(yml => yaml.safeLoad(yml)),
     // Fetch the taxonomy data and load it as json.
-    fetch("data/taxonomy.yml").then(res => res.text()).then(yml => yaml.safeLoad(yml)),
+    fetch("data/taxonomy.yml").then(res => res.text()).then(ymlTxt => {
+        const unformatedProperties = yaml.safeLoad(ymlTxt);
+        const result = {};
+        Object.keys(unformatedProperties).forEach((pName) => {
+            const p = unformatedProperties[pName];
+            result[pName] = Array.isArray(p) ? { categories: p }
+                                             : p ? p
+                                                 : { categories: [] }
+        });
+        return result;
+    }),
     // Also wait for the document to be loaded.
     docLoadedPromise
-]).then((result) => {
-    const [biblio, references] = result;
-    const propCategories = tie(result[2]);
+]).then((results) => {
+    const [biblio, references, properties] = results.map(tie);
 
-    const targetPropertyNames = tie(["Topic", "Interaction Direction", "Input Sequencing"]);
+    const targetPropertiesNames = tie(["Topic", "Interaction Direction", "Input Sequencing"]);
     // Associate each properties with its different categories.
-    const targetProperties = tie(() => targetPropertyNames.get().map(
+    const targetProperties = tie(() => targetPropertiesNames.get().map(
         (name) => ({
             name,
-            categories: propCategories.prop(name).get() || []
+            categories: properties.get()[name].categories || []
         })
     ));
 
-    const categoryNames = tie(() => Object.keys(propCategories.get()));
+    const categoryNames = tie(() => Object.keys(properties.get()));
 
-    const propSelector = new PropSelector(categoryNames, targetPropertyNames);
+    const propSelector = new PropSelector(categoryNames, targetPropertiesNames);
     document.querySelector(".selector-wrapper").appendChild(propSelector.dom);
 
     // Create the reference entries.
-    const refEntries = tie(Object.keys(references).map((k) => new Entry(
-        k, references[k], biblio[k]
-    )));
+    const refEntries = tie(() => {
+        const refs = references.get(), bib = biblio.get();
+        return Object.keys(refs).map((k) => new Entry(
+            k, refs[k], bib[k]
+        ))
+    });
     // Create the property tree.
-    const propTree = tie(()=> new CategoryTree(targetProperties.get(), refEntries.get()));
+    const propTree = tie(() => new CategoryTree(targetProperties.get(), refEntries.get()));
     // Create the table and append it.
     const tableDOM = tie(() => parseHTML(refTable("ref-table", propTree.get(), targetProperties.get()))[0]);
 
     let previousDOM = null;
-
     tie.liven(()=>{
         if(previousDOM){
             previousDOM.parentNode.removeChild(previousDOM);

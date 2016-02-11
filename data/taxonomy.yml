@@ -3,18 +3,35 @@ Topic:
     - Interaction
     - Usages
     - Vision
+
 Interaction Direction:
-    - Input
-    - Output
+    parent:
+        Topic: Interaction
+    categories:
+        - Input
+        - Output
+
 Input Sequencing:
-    - Separated
-    - Sequential
-    - Parallel
+    parent:
+        Interaction Direction: Input
+    categories:
+        - Separated
+        - Sequential
+        - Parallel
+
 Architecture:
-    - "Server-based Synchronization"
-    - "Instrumental Interaction"
+    parent:
+        Topic: CDI Programming
+    categories:
+        - "Server-based Synchronization"
+        - "Instrumental Interaction"
+
 Output Separation:
-    - "Focus & Context"
+    parent:
+        Input Direction: Output
+    categories:
+        - "Focus & Context"
+
 Devices:
     - Watch
     - Phone
