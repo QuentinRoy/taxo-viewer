@@ -31,8 +31,8 @@ function hasBottomBar(node){
     }
 }
 
-function createHeaderRows(categoryNode, properties, rows=[], rowNum=0, colNum=0){
-    const currentRow = rows[rowNum] = rows[rowNum] || new Array(colNum).fill({ width: 1, filler: true });
+function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, currentColNum=0){
+    const currentRow = rows[currentRowNum] = rows[currentRowNum] || new Array(currentColNum).fill({ width: 1, isFiller: true });
     // Fetch the possible sub categories for the subproperty of the categoryNode and add the "undefined" category.
     const directSub = categoryNode.subProperties[0];
     const subCategories = properties.find(
@@ -45,38 +45,36 @@ function createHeaderRows(categoryNode, properties, rows=[], rowNum=0, colNum=0)
     // Add the subcells of unknown category
     subcells.push(...categoryNode.getSubCategoriesList().filter(sp => subcells.indexOf(sp) < 0));
 
-    function addSubHeaderRow(node){
-        const width = getCellWidth(node);
-        currentRow.splice(colNum, width, {
-            node,
-            width,
-            bottomBar: hasBottomBar(node)
-        });
-        if(!node.isLeave){
-            createHeaderRows(node, properties, rows, rowNum + 1, colNum);
-        }
-        colNum += width;
-    }
-
     // Reapply for all subcells that are not at the bottom of the header
     if(!subcells.every(sc => sc.isEmpty() || !sc.category)){
-        subcells.forEach(addSubHeaderRow);
-    } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories){
-        // In case of undefined category, add it only if it is a leave
-        const undefCat = categoryNode.subCategories["undefined"];
-        if(!undefCat.isLeave){
-            createHeaderRows(undefCat, properties, rows, rowNum, colNum);
-        } else {
-            addSubHeaderRow(undefCat);
-        }
+        let colNum = currentColNum;
+        subcells.forEach((node) => {
+            const width = getCellWidth(node);
+            currentRow.splice(colNum, width, {
+                node,
+                width,
+                bottomBar: hasBottomBar(node)
+            });
+            if(!node.isLeave){
+                createHeaderRows(node, properties, rows, currentRowNum + 1, colNum);
+            }
+            colNum += width;
+        });
+    } else if(categoryNode.subCategories && "undefined" in categoryNode.subCategories
+                                         && !categoryNode.subCategories["undefined"].isLeave){
+        // In case of only an undefined category, just create the subHeaders but do not add it.
+        createHeaderRows(categoryNode.subCategories["undefined"], properties, rows, currentRowNum, currentColNum);
+    } else if(currentRow.every(c => c.isFiller)){
+        // If nothing has been added to the row and it is only filled with fillers, removes it.
+        rows.splice(currentRowNum, 1);
     }
 
-    // Make sure each sub rows 
+    // Make sure each sub rows has the proper length.
     const rowWidth = rows[0].reduce((acc, c) => acc + c.width, 0);
     const colHeight = rows.length;
-    for(let rowNum2=Math.max(rowNum, 1); rowNum2 < colHeight; rowNum2++){
-        const currentWidth = rows[rowNum2].reduce((acc, c) => acc + c.width, 0);
-        rows[rowNum2].push(...new Array(rowWidth - currentWidth).fill({ width: 1, filler: true }));
+    for(let rowNum=Math.max(currentRowNum, 1); rowNum < colHeight; rowNum++){
+        const currentWidth = rows[rowNum].reduce((acc, c) => acc + c.width, 0);
+        rows[rowNum].push(...new Array(rowWidth - currentWidth).fill({ width: 1, isFiller: true }));
     }
     return rows;
 }
@@ -93,7 +91,7 @@ function createBodyRows(headerRows){
         (r1, r2) => r2.map(
             (ci2, ci) => {
                 const ci1 = r1[ci];
-                return ci2.filler ? ci1 : ci2;
+                return ci2.isFiller ? ci1 : ci2;
             }
         )
     );
