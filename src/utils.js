@@ -31,3 +31,7 @@ export function objEntries(obj){
 export function objValues(obj){
     return Object.keys(obj).map(k => obj[k]);
 }
+
+export function strReplaceAll(target, search, replacement){
+    return target.replace(new RegExp(search, 'g'), replacement);
+}

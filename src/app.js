@@ -2,11 +2,12 @@ import yaml from "js-yaml";
 import { Entry, CategoryTree } from "./model"
 import refTable from "./ref-table";
 import bibtex from "bibtex-parse-js";
-import { parseHTML, docLoadedPromise, objEntries } from "./utils";
+import { parseHTML, docLoadedPromise, objEntries, strReplaceAll } from "./utils";
 import tooltip from "./tooltip";
 import tooltipTemplate from "./templates/tooltip.handlebars";
 import tie from "tie";
 import PropSelector from "./prop-selector";
+import querystring from "querystring";
 
 const normalizeProperty = p => Array.isArray(p) ? { categories: p }
                                                 : p ? p
@@ -19,6 +20,8 @@ const biblioListToDict = bibEntries => bibEntries.reduce(
     (bibDict, e) => Object.assign(bibDict, { [e.citationKey]: e }),
     {}
 );
+
+const urlParams = querystring.parse(window.location.search.substring(1));
 
 Promise.all([
     // Fetch the bibliography and parses it.
@@ -38,7 +41,10 @@ Promise.all([
 ]).then((results) => {
     const [biblio, references, properties] = results.map(tie);
 
-    const targetPropertiesNames = tie(["Topic", "Interaction Direction", "Input Sequencing"]);
+    const targetPropertiesNames = tie(
+        urlParams.properties ? strReplaceAll(urlParams.properties, "_", " ").split(',')
+                             : ["Topic", "Interaction Direction", "Input Sequencing"]
+    );
     // Associate each properties with its different categories.
     const targetProperties = tie(() => targetPropertiesNames.get().map(
         (name) => ({
