@@ -92,7 +92,7 @@ export class CategoryNode {
             const entryCats = entry.properties[this.subProperties[0].name];
             (Array.isArray(entryCats) ? entryCats : [entryCats]).forEach(entryCat => {
                 if(!(entryCat in this.subCategories)){
-                    this._addSubCategory()
+                    this._addSubCategory(entryCat);
                 }
                 this.subCategories[entryCat].addEntry(entry);
             });
