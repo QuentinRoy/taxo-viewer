@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
-    "build": "./node_modules/.bin/webpack --config webpack.config.js",
+    "build": "./node_modules/.bin/webpack --config webpack.config.js --optimize-minimize --optimize-dedupe",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
