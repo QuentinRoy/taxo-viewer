@@ -71,12 +71,11 @@ const selectionPromise = docLoadedPromise.then(() => taxoReq).then((taxonomy) =>
         urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS
     );
     selectorWrapper.appendChild(propSelector.dom);
-    selectorWrapper.classList.remove("loading");
     return propSelector.selection;
 });
 
 // Create the table.
-Promise.all(
+const tablePromise = Promise.all(
     [biblioReq, refsReq, taxoReq, selectionPromise, docLoadedPromise]
 ).then(([biblio, references, properties, targetPropertiesNames]) => {
 
@@ -107,28 +106,33 @@ Promise.all(
         // Associate each entry with its dom(s) and create the tooltips.
         for(const entry of refEntries.get()){
             entry.doms = Array.from(
-                cachedTableDOM.querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
+                cachedTableDOM.querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`)
             );
             for(const dom of entry.doms){
-                entry.tooltip = tooltip(dom, {
+                const refEntry = dom.querySelector(".ref-entry");
+                const entryTooltip = tooltip(dom.querySelector(".ref-highlight"), {
                     content: tooltipTemplate(entry),
                     position: "bottom",
+                    trigger: "custom",
                     delay: 0
                 });
-                dom.addEventListener("mouseover", () => {
-                    entry.doms.forEach(d => d.classList.add("highlighted"));
+                refEntry.addEventListener("mouseover", () => {
+                    entry.doms.forEach(d => {
+                        d.classList.add("highlighted");
+                        entryTooltip.show();
+                    });
                 });
-                dom.addEventListener("mouseout", () => {
-                    entry.doms.forEach(d => d.classList.remove("highlighted"));
+                refEntry.addEventListener("mouseout", () => {
+                    entry.doms.forEach(d => {
+                        entryTooltip.hide();
+                        d.classList.remove("highlighted");
+                    });
                 });
             }
         }
     });
-
-    // Make the loadWrapper fade out.
-    document.querySelector("#load-wrapper").classList.remove("loading");
-    tableWrapper.classList.remove("loading");
 });
+
 
 // Manage url arguments updates and history states.
 selectionPromise.then((targetPropertiesNames) => {
@@ -152,3 +156,10 @@ selectionPromise.then((targetPropertiesNames) => {
     // Update target properties when the state changes.
     window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
 });
+
+// Manage loading.
+tablePromise.then(() => tableWrapper.classList.remove("loading"));
+selectionPromise.then(() => selectorWrapper.classList.remove("loading"));
+Promise.all([tablePromise, selectionPromise]).then(
+    () => document.querySelector("#load-wrapper").classList.remove("loading")
+);
