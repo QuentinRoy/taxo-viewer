@@ -2,13 +2,19 @@
     <head>
         <title>Faceted Taxonomy Viewer</title>
         <meta charset="utf-8">
-        <script src="assets/app.js"></script>
-        <link type="text/css" rel="stylesheet" href="app.css">
     </head>
     <body>
         <div id="content">
-            <div class="selector-wrapper"></div>
-            <div class="table-wrapper"></div>
+            <div class="selector-wrapper loading"></div>
+            <div class="table-wrapper loading"></div>
+            <div id="load-wrapper" class="loading">
+                <div class="cssload-container">
+                    <div class="cssload-speeding-wheel"></div>
+                </div>
+            </div>
         </div>
+        <link type="text/css" rel="stylesheet" href="loader.css">
+        <link type="text/css" rel="stylesheet" href="app.css">
+        <script src="assets/app.js"></script>
     </body>
 </html>
