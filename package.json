@@ -22,6 +22,8 @@
     "bibtex-parse-js": "0.0.22",
     "css-loader": "^0.23.1",
     "exports-loader": "^0.6.2",
+    "handlebars": "^4.0.5",
+    "handlebars-loader": "^1.1.4",
     "imports-loader": "^0.6.5",
     "jquery": "^2.2.0",
     "js-yaml": "^3.5.2",
