@@ -106,19 +106,27 @@ const tablePromise = Promise.all(
         // Associate each entry with its dom(s) and create the tooltips.
         for(const entry of refEntries.get()){
             entry.doms = Array.from(
-                cachedTableDOM.querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
+                cachedTableDOM.querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`)
             );
             for(const dom of entry.doms){
-                entry.tooltip = tooltip(dom, {
+                const refEntry = dom.querySelector(".ref-entry");
+                const entryTooltip = tooltip(dom.querySelector(".ref-highlight"), {
                     content: tooltipTemplate(entry),
                     position: "bottom",
+                    trigger: "custom",
                     delay: 0
                 });
-                dom.addEventListener("mouseover", () => {
-                    entry.doms.forEach(d => d.classList.add("highlighted"));
+                refEntry.addEventListener("mouseover", () => {
+                    entry.doms.forEach(d => {
+                        d.classList.add("highlighted");
+                        entryTooltip.show();
+                    });
                 });
-                dom.addEventListener("mouseout", () => {
-                    entry.doms.forEach(d => d.classList.remove("highlighted"));
+                refEntry.addEventListener("mouseout", () => {
+                    entry.doms.forEach(d => {
+                        entryTooltip.hide();
+                        d.classList.remove("highlighted");
+                    });
                 });
             }
         }

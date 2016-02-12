@@ -3,11 +3,16 @@ html, body {
     margin: 0;
 }
 
-#content {
+#scroll-area {
     position: relative;
     width: 100%;
     height:100%;
     overflow: scroll;
+}
+
+#content {
+    position: absolute;
+    min-width: 100%;
 }
 
 .selector-wrapper {
@@ -39,12 +44,11 @@ html, body {
 
 #ref-table {
     display: block;
-    margin: 1em 0;
+    margin: 1em auto;
     position: relative;
     border-bottom: 3px solid black;
     border-top: 3px solid black;
     border-collapse: collapse;
-    min-width: 100%;
 }
 
 #ref-table thead {
@@ -68,30 +72,37 @@ html, body {
 }
 
 #ref-table a {
-    display: inline-block;
     text-decoration: none;
     color: inherit;
+    display: inline-block;
+    padding: 0.2em;
 }
 
 #ref-table .ref-entry {
+    position: relative;
     display: inline-block;
 }
 
-#ref-table .ref-content {
-    display: inline-block;
-    padding: 0.1em 0.2em;
+#ref-table .ref-highlight {
+    pointer-events: none;
     border-radius: 0.2em;
+    position: absolute;
+    top: 0.4em;
+    left: 0.4em;
+    height: calc(100% - 0.8em);
+    width: calc(100% - 0.8em);
     transition-duration: 0.2s;
-}
-
-#ref-table .highlighted .ref-content {
-    background-color: #E6E6E6;
-    transition-duration: 0s;
-}
-
-#ref-table .highlighted a .ref-content {
+    opacity: 0;
     background-color: #CCE5FF;
-    color: #001021;
+}
+
+#ref-table .no-url .ref-highlight {
+    background-color: #E6E6E6;
+}
+
+#ref-table .highlighted .ref-highlight {
+    transition-duration: 0s;
+    opacity: 1;
 }
 
 #ref-table .na {

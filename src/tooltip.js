@@ -6,5 +6,11 @@ export default function tooltip(target, args){
     args = Object.assign({ theme: "tooltipster-ref", speed: 100 }, args);
     args.content = jquery(args.content);
 
-    jquery(target).tooltipster(args);
+    const $target = jquery(target);
+    $target.tooltipster(args);
+
+    return {
+        show() { $target.tooltipster("show") },
+        hide() { $target.tooltipster("hide") }
+    }
 }
