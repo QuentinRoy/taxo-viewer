@@ -31,10 +31,14 @@ html, body {
     cursor: pointer;
 }
 
-.table-wrapper {}
+.table-wrapper {
+    padding: 0 1em;
+    display: inline-block;
+}
 
 #ref-table {
-    margin: 1em;
+    display: block;
+    margin: 1em 0;
     position: relative;
     border-bottom: 3px solid black;
     border-top: 3px solid black;
