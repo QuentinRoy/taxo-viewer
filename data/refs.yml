@@ -183,8 +183,8 @@ Nebeling2014:
         - Device Adaptation
         - Plasticity
     Task:
-        - Meeting Room
-        - Class Room
+        - Meeting
+        - Teaching
     Multi-Users: Multi-Users
     Authoring: Simulator
     Device:
@@ -192,3 +192,18 @@ Nebeling2014:
         - Phone
         - Tablet
         - Computer
+
+Hinckley2004:
+    Topic: Interaction
+    Interaction Direction: Input
+    Multi-Users: Single-User
+    Device: Tablet
+    Task: Data Transfer
+    Input Sequencing: Sequential
+
+Wigdor2009:
+    Topic: Interaction
+    Interaction Direction: Input
+    Multi-Users: Multi-Users
+    Task: Meeting
+    Input Sequencing: Separated
