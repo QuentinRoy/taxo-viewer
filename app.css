@@ -114,15 +114,12 @@ html, body {
     line-height: 16px;
     padding: 8px 10px;
 }
-
 .tooltipster-ref h3 {
     margin-top: 0;
 }
-
 .tooltipster-ref .authors, .tooltipster-ref .book-title {
     margin-top: 1em;
 }
-
 .tooltipster-ref .book-title {
     font-style: italic;
 }

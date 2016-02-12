@@ -71,12 +71,11 @@ const selectionPromise = docLoadedPromise.then(() => taxoReq).then((taxonomy) =>
         urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS
     );
     selectorWrapper.appendChild(propSelector.dom);
-    selectorWrapper.classList.remove("loading");
     return propSelector.selection;
 });
 
 // Create the table.
-Promise.all(
+const tablePromise = Promise.all(
     [biblioReq, refsReq, taxoReq, selectionPromise, docLoadedPromise]
 ).then(([biblio, references, properties, targetPropertiesNames]) => {
 
@@ -124,11 +123,8 @@ Promise.all(
             }
         }
     });
-
-    // Make the loadWrapper fade out.
-    document.querySelector("#load-wrapper").classList.remove("loading");
-    tableWrapper.classList.remove("loading");
 });
+
 
 // Manage url arguments updates and history states.
 selectionPromise.then((targetPropertiesNames) => {
@@ -152,3 +148,10 @@ selectionPromise.then((targetPropertiesNames) => {
     // Update target properties when the state changes.
     window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
 });
+
+// Manage loading.
+tablePromise.then(() => tableWrapper.classList.remove("loading"));
+selectionPromise.then(() => selectorWrapper.classList.remove("loading"));
+Promise.all([tablePromise, selectionPromise]).then(
+    () => document.querySelector("#load-wrapper").classList.remove("loading")
+);
