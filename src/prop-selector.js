@@ -1,13 +1,13 @@
 import tie from "tie";
 import template from "./templates/prop-selector.handlebars";
-import {parseHTML, arrayRemove} from "./utils";
+import { parseHTML } from "./utils";
 
 export default class PropertySelector {
-    constructor(properties, selection){
-        this.properties = properties;
-        this.selection = selection;
+    constructor(properties, initSelection){
+        this.properties = tie(properties);
+        this.selection = tie(initSelection);
         this.availableProperties = tie(() => {
-            const _selection = selection.get();
+            const _selection = this.selection.get();
             return this.properties.get().filter((p) => _selection.indexOf(p) < 0);
         });
         const html = tie(() => template({

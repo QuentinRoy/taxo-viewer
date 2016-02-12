@@ -26,11 +26,17 @@ const normalizeProperties = properties => mapValues(properties,
 const normalizeRefs = refs => mapValues(refs, r => normalizeRef(r));
 const normalizeRef = ref => mapValues(ref, p => Array.isArray(p) ? p : [p]);
 const biblioListToDict = bibEntries => bibEntries.reduce(
-    (bibDict, e) => Object.assign(bibDict, {[e.citationKey]: e}),
-    {}
+    (bibDict, e) => Object.assign(bibDict, {[e.citationKey]: e}), {}
 );
 
+// Retrieve the url arguments and create the decoder and encoder.
 const urlParams = querystring.parse(window.location.search.substring(1));
+const decodePropertyUrlParam = (pParam) => strReplaceAll(pParam, "_", " ").split(',');
+const encodePropertyUrlParam = (pParam) => strReplaceAll(pParam.join(","), " ", "_");
+
+const sorting = tie(urlParams.sorting || DEFAULT_SORTING);
+const selectorWrapper = document.querySelector(".selector-wrapper");
+const tableWrapper = document.querySelector(".table-wrapper");
 
 const noCacheHeader = new Headers();
 noCacheHeader.append('pragma', 'no-cache');
@@ -40,40 +46,44 @@ const fetchArgs = {
     headers: noCacheHeader
 }
 
-Promise.all([
-    // Fetch the bibliography and parses it.
-    fetch("data/biblio.bib", fetchArgs).then(res => res.text()).then(
-        bib => biblioListToDict(bibtex.toJSON(bib))
-    ),
-    // Fetch the reference data and load it as json.
-    fetch("data/refs.yml", fetchArgs).then(res => res.text()).then(
-        yml => normalizeRefs(yaml.safeLoad(yml))
-    ),
-    // Fetch the taxonomy data, load it as json and normalize it.
-    fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).then(
-        ymlTxt => normalizeProperties(yaml.safeLoad(ymlTxt))
-    ),
-    // Also wait for the document to be loaded.
-    docLoadedPromise
-]).then((results) => {
-    const sorting = tie(urlParams.sorting || DEFAULT_SORTING);
-    const selectorWrapper = document.querySelector(".selector-wrapper");
-    const tableWrapper = document.querySelector(".table-wrapper");
-    const [biblio, references, properties] = results.map(tie);
+// Fetch the bibliography and parses it, and make it a constraint.
+const biblioReq = fetch("data/biblio.bib", fetchArgs).then(res => res.text()).then(
+    bib => biblioListToDict(bibtex.toJSON(bib))
+).then(tie);
 
-    const propertiesNames = tie(() => Object.keys(properties.get()));
-    const targetPropertiesNames = tie(
-        urlParams.properties ? strReplaceAll(urlParams.properties, "_", " ").split(',')
-                             : DEFAULT_PROPS
+// Fetch the reference data and load it as json and make it a constraint.
+const refsReq = fetch("data/refs.yml", fetchArgs).then(res => res.text()).then(
+    yml => normalizeRefs(yaml.safeLoad(yml))
+).then(tie);
+
+// Fetch the taxonomy data, load it as json and normalize it and make it a constraint.
+const taxoReq = fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).then(
+    ymlTxt => normalizeProperties(yaml.safeLoad(ymlTxt))
+).then(tie);
+
+// Will create the property selector widget and returns a promise of a (writable) constraint 
+// on the selection.
+const selectionPromise = docLoadedPromise.then(() => taxoReq).then((taxonomy) => {
+    const propertiesNames = tie(() => Object.keys(taxonomy.get()));
+    // Create the property selector.
+    const propSelector = new PropSelector(
+        propertiesNames,
+        urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS
     );
+    selectorWrapper.appendChild(propSelector.dom);
+    selectorWrapper.classList.remove("loading");
+    return propSelector.selection;
+});
+
+// Create the table.
+Promise.all(
+    [biblioReq, refsReq, taxoReq, selectionPromise, docLoadedPromise]
+).then(([biblio, references, properties, targetPropertiesNames]) => {
+
+    // Get the actual property object from the names of the target properties names.
     const targetProperties = tie(() => targetPropertiesNames.get().map(
         (name) => properties.prop(name).get()
     ));
-
-    // Create the property selector.
-    const propSelector = new PropSelector(propertiesNames, targetPropertiesNames);
-    selectorWrapper.appendChild(propSelector.dom);
-    selectorWrapper.classList.remove("loading");
 
     // Create the reference entries.
     const refEntries = tie(() => {
@@ -94,7 +104,7 @@ Promise.all([
         tableWrapper.appendChild(tableDOM.get());
         cachedTableDOM = tableDOM.get();
 
-        // Associate each entry with its dom and create the tooltips.
+        // Associate each entry with its dom(s) and create the tooltips.
         for(const entry of refEntries.get()){
             entry.doms = Array.from(
                 cachedTableDOM.querySelectorAll(`[data-bib-id=${entry.id}] .ref-entry`)
@@ -114,31 +124,31 @@ Promise.all([
             }
         }
     });
-    
+
     // Make the loadWrapper fade out.
     document.querySelector("#load-wrapper").classList.remove("loading");
     tableWrapper.classList.remove("loading");
+});
 
-    // Manage the history state and the url.
-    // FIXME: Erases any arguments other than properties.
-    const propQuery = tie(() => strReplaceAll(targetPropertiesNames.get().join(","), " ", "_"));
-    targetPropertiesNames.onChange((properties)=>{
+// Manage url arguments updates and history states.
+selectionPromise.then((targetPropertiesNames) => {
+
+    // Update url & state in function of target properties' names.
+    targetPropertiesNames.onChange((propertiesNames)=>{
         const stateProp = window.history.state && window.history.state.properties;
-        if(!isEqual(stateProp, properties)){
+        if(!isEqual(stateProp, propertiesNames)){
+            // FIXME: Erases any arguments other than properties (such as sorting).
             window.history.pushState({
-                properties: properties.slice()
-            }, null, "?properties="+propQuery.get());
+                properties: propertiesNames.slice()
+            }, null, "?properties="+ encodePropertyUrlParam(propertiesNames));
         }
     });
+
+    // Replace the current state.
     window.history.replaceState({
         properties: targetPropertiesNames.get().slice()
-    }, null, "?properties="+propQuery.get());
-    window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
+    }, null, "?properties=" + encodePropertyUrlParam(targetPropertiesNames.get()));
 
-}).catch((err) => {
-    if(err.message){
-        console.error(err.stack, err.message);
-    } else {
-        console.error(err);
-    }
+    // Update target properties when the state changes.
+    window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
 });
