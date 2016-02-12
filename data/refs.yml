@@ -10,6 +10,7 @@ Badam2014:
     Adaptation: No Adaptation
     Synchronization: Data Synchro
     Task: WEB
+    Device: Computer
 
 Houben2015:
     Topic: [CDI Programming, Interaction]
@@ -19,6 +20,7 @@ Houben2015:
     Output Separation:
         - Focus & Context
         - Object & Widgets
+        - Alternative Visualization
     Input Sequencing: Parallel
     Device:
         - Watch
@@ -43,18 +45,26 @@ Chi2015:
     Synchronization:
         - Data Synchro
         - Event Merging
+    Adaptation: No Adaptation
+    Device:
+        - Glass
+        - Tablet
+        - Phone
+    Authoring: Simulator
 
 Klokmose2009:
     Topic: CDI Programming
     Architecture: Instrumental Interaction
     Sharing: Data Sharing
     Adaptation: No Adaptation
+    Device: Generic
 
 Gjerlufsen2011:
     Topic: CDI Programming
     Architecture: Instrumental Interaction
     Sharing: Data Sharing
     Adaptation: No Adaptation
+    Device: Generic
 
 Chen2014:
     Topic: Interaction
@@ -87,7 +97,7 @@ Rekimoto1998:
     Interaction Direction: Input
     Input Sequencing: Sequential
     Multi-Users: Multi-Users
-    Device: Smart Pen
+    Device: Other
     Task: Data Transfer
 
 Rekimoto1997:
@@ -95,7 +105,7 @@ Rekimoto1997:
     Interaction Direction: Input
     Input Sequencing: Sequential
     Multi-Users: Single-User
-    Device: Smart Pen
+    Device: Other
     Task: Data Transfer
 
 Rekimoto1999:
@@ -123,3 +133,62 @@ Pierce2003:
 
 Fitzmaurice2003a:
     Topic: Vision
+
+Yang2014:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+    Adaptation: Device Adaptation
+    Device: Generic
+
+VonZadow2014:
+    Topic: Interaction
+    Interaction Direction:
+        - Output
+        - Input
+    Input Sequencing: Separated
+    Multi-Users: Single-User
+    Device: Other
+    Task:
+        - Data Transfer
+        - Drawing
+        - Geographical Data
+    Output Separation:
+        - Object & Widgets
+        - Focus & Context
+        - Alternative Visualization
+
+Hamilton2014:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Separated
+    Multi-Users: Single-User
+    Device: Tablet
+    Task: Data Transfer
+
+Myers2001a:
+    Topic: Interaction
+    Interaction Direction: Input
+    Input Sequencing: Separated
+    Multi-Users: Single-User
+    Device:
+        - Computer
+        - Phone
+    Task: Slide Show
+
+Nebeling2014:
+    Topic: CDI Programming
+    Architecture: Server-based Synchronization
+    Sharing: Data Sharing
+    Adaptation:
+        - Device Adaptation
+        - Plasticity
+    Task:
+        - Meeting Room
+        - Class Room
+    Multi-Users: Multi-Users
+    Authoring: Simulator
+    Device:
+        - Generic
+        - Phone
+        - Tablet
+        - Computer

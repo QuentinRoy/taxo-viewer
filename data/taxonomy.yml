@@ -41,8 +41,8 @@ Adaptation:
     categories:
         - Context Adaptation
         - Device Adaptation
+        - Plasticity
         - No Adaptation
-
 
 Output Separation:
     parents:
@@ -51,11 +51,12 @@ Output Separation:
         - Focus & Context
         - Object & Widgets
         - Extension
+        - Alternative Visualization
 
 Device:
     - Computer
+    - Glasses
     - Phone
-    - TouchScreen
     - Tablet
     - Watch
 
