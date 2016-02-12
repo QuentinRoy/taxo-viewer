@@ -43,8 +43,6 @@
         -moz-animation: cssload-spin 425ms infinite linear;
 }
 
-
-
 @keyframes cssload-spin {
     100%{ transform: rotate(360deg); transform: rotate(360deg); }
 }

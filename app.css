@@ -75,7 +75,7 @@ html, body {
     text-decoration: none;
     color: inherit;
     display: inline-block;
-    padding: 0.2em;
+    padding: 0.1em 0.2em;
 }
 
 #ref-table .ref-entry {
