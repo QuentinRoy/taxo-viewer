@@ -34,6 +34,7 @@ html, body {
 .table-wrapper {
     padding: 0 1em;
     display: inline-block;
+    min-width: calc(100% - 2em);
 }
 
 #ref-table {
@@ -43,6 +44,7 @@ html, body {
     border-bottom: 3px solid black;
     border-top: 3px solid black;
     border-collapse: collapse;
+    min-width: 100%;
 }
 
 #ref-table thead {
