@@ -1,4 +1,5 @@
 import tableTemplate from "./templates/table.handlebars";
+import isFunction from "lodash-es/isFunction";
 
 function getCellWidth(categoryNode){
     if(categoryNode.isLeaf){
@@ -92,7 +93,7 @@ const fillRow = (row, nb, filler=null) => {
 } 
 
 
-function createBodyRows(headerRows){
+function createBodyRows(headerRows, sorting){
     const bodyRows = [];
     // Spread the headers so that a header of width 3 will be cloned in 3 consecutive cells.
     const spreadedHeaders = headerRows.map(row => row.reduce(
@@ -116,9 +117,11 @@ function createBodyRows(headerRows){
 
     bottomHeaders.forEach((header, colNum) => {
         if(header.node && header.node.entries){
-            header.node.entries.sort(
-                (e1, e2) => e1.biblio.entryTags.year - e2.biblio.entryTags.year
-            ).forEach((entry, rowNum) => {
+            const entries = header.node.entries.slice();
+            if(sorting){
+                entries.sort(sorting);
+            }
+            entries.forEach((entry, rowNum) => {
                 const row = bodyRows[rowNum] = bodyRows[rowNum] || new Array(colNb).fill(null);
                 row[colNum] = entry;
             });
@@ -127,11 +130,17 @@ function createBodyRows(headerRows){
     return bodyRows;
 }
 
-export default function refTable(id, refEntries, properties){
+const sortings = {
+    descending: (e1, e2) => e1.biblio.entryTags.year - e2.biblio.entryTags.year,
+    ascending: (e1, e2) => -sortings.descending(e1, e2)
+}
+
+export default function refTable(id, refEntries, properties, sorting){
+    const sortFunc = isFunction(sorting) ? sorting : sortings[sorting]; 
     const headerRows = createHeaderRows(refEntries, properties);
     return tableTemplate({
         id: id,
         headerRows,
-        bodyRows: createBodyRows(headerRows)
+        bodyRows: createBodyRows(headerRows, sortFunc)
     });
 }

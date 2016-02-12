@@ -10,6 +10,10 @@ import PropSelector from "./prop-selector";
 import querystring from "querystring";
 import isEqual from "lodash-es/isEqual";
 import mapValues from "lodash-es/mapValues";
+import {
+    sorting as DEFAULT_SORTING,
+    targetProperties as DEFAULT_PROPS
+} from "./defaults";
 
 const normalizeProperty = (pName, p) => {
     p = Array.isArray(p) ? { categories: p } : p ? p
@@ -45,13 +49,15 @@ Promise.all([
     docLoadedPromise
 ]).then((results) => {
     const [biblio, references, properties] = results.map(tie);
+    const sorting = tie(urlParams.sorting || DEFAULT_SORTING);
 
     const targetPropertiesNames = tie(
         urlParams.properties ? strReplaceAll(urlParams.properties, "_", " ").split(',')
-                             : ["Topic", "Interaction Direction", "Input Sequencing"]
+                             : DEFAULT_PROPS
     );
 
     // Manage the history state and the url.
+    // FIXME: Erases any arguments other than properties.
     const propQuery = tie(() => strReplaceAll(targetPropertiesNames.get().join(","), " ", "_"));
     targetPropertiesNames.onChange((properties)=>{
         const stateProp = window.history.state && window.history.state.properties;
@@ -84,7 +90,7 @@ Promise.all([
     // Create the property tree.
     const propTree = tie(() => new CategoryTree(targetProperties.get(), refEntries.get()));
     // Create the table and append it.
-    const tableDOM = tie(() => parseHTML(refTable("ref-table", propTree.get(), targetProperties.get()))[0]);
+    const tableDOM = tie(() => parseHTML(refTable("ref-table", propTree.get(), targetProperties.get(), sorting.get()))[0]);
 
     let cacheddom = null;
     tie.liven(()=>{
