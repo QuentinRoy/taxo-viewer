@@ -1,9 +1,9 @@
 #load-wrapper {
     position: absolute;
-    visibility: hidden;
     transition-delay: visibility 200ms;
     transition: 200ms;
     opacity: 0;
+    visibility: hidden;
     top: calc(50% - 25px);
     width: 100%;
 }
@@ -41,6 +41,16 @@
         -ms-animation: cssload-spin 425ms infinite linear;
         -webkit-animation: cssload-spin 425ms infinite linear;
         -moz-animation: cssload-spin 425ms infinite linear;
+}
+
+.cssload-background {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    margin: -13px -40px;
+    left: 50%;
+    background-color: white;
+    border-radius: 50%;
 }
 
 @keyframes cssload-spin {
