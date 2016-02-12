@@ -1,5 +1,6 @@
 import tie from "tie";
 import template from "./templates/prop-selector.handlebars";
+import "./templates/prop-selector.css";
 import { parseHTML } from "./utils";
 
 export default class PropertySelector {

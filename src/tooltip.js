@@ -1,4 +1,5 @@
 import "tooltipster/css/tooltipster.css";
+import "./templates/tooltip.css";
 import jquery from "imports?jQuery=jquery!exports?jQuery!tooltipster"; // Patches jquery
 
 export default function tooltip(target, args){

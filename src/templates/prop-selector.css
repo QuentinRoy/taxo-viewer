@@ -1,0 +1,19 @@
+.selector-wrapper {
+    margin: 1em;
+}
+.property-selector {
+    padding: .5em 1em;
+    border-radius: 5px;
+    background: #F2F2F2;
+}
+.property-selector .prop-selector-av, .property-selector .prop-selector-selection{
+    display: inline-block;
+    transition-duration: 0.2s;
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+}
+.property-selector .prop-selector-av:hover,  .property-selector .prop-selector-selection:hover {
+    background-color: #E6E6E6;
+    transition-duration: 0s;
+    cursor: pointer;
+}
