@@ -1,9 +1,3 @@
-.table-wrapper {
-    padding: 0 1em;
-    display: inline-block;
-    min-width: calc(100% - 2em);
-}
-
 #ref-table {
     display: block;
     margin: 1em auto;
