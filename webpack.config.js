@@ -11,7 +11,7 @@ var es6modules = ["lodash-es"].map(function(moduleName){
 module.exports = {
   entry: {
     // includes jquery in the app as it is required by all menu techniques
-    app: [ path.resolve(__dirname, "src/app.js") ],
+    app: [ "babel-polyfill",  path.resolve(__dirname, "src/app.js") ],
   },
   output: {
     path: path.join(__dirname, "assets"),
