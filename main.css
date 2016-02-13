@@ -1,3 +1,30 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+.table-wrapper {
+    padding: 0 1em;
+    display: inline-block;
+    min-width: calc(100% - 2em);
+}
+
+.selector-wrapper {
+    margin: 1em;
+}
+
+#scroll-area {
+    position: relative;
+    width: 100%;
+    height:100%;
+    overflow: scroll;
+}
+
+#content {
+    position: absolute;
+    min-width: 100%;
+}
+
 #load-wrapper {
     position: absolute;
     transition-delay: visibility 200ms;

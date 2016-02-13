@@ -1,6 +1,7 @@
 import yaml from "js-yaml";
 import { Entry, CategoryTree } from "./model"
 import refTable from "./ref-table";
+import "./templates/table.css";
 import bibtex from "bibtex-parse-js";
 import { parseHTML, docLoadedPromise, strReplaceAll } from "./utils";
 import tooltip from "./tooltip";
