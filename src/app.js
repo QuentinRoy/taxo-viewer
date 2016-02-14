@@ -62,7 +62,7 @@ const taxoReq = fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).th
     ymlTxt => normalizeProperties(yaml.safeLoad(ymlTxt))
 ).then(tie);
 
-// Will create the property selector widget and returns a promise of a (writable) constraint 
+// Will create the property selector widget and returns a promise of a (writable) constraint
 // on the selection.
 const selectionPromise = docLoadedPromise.then(() => taxoReq).then((taxonomy) => {
     const propertiesNames = tie(() => Object.keys(taxonomy.get()));
@@ -136,7 +136,7 @@ const tablePromise = Promise.all(
 
 
 // Manage url arguments updates and history states.
-selectionPromise.then((targetPropertiesNames) => {
+const urlPromise = selectionPromise.then((targetPropertiesNames) => {
 
     // Update url & state in function of target properties' names.
     targetPropertiesNames.onChange((propertiesNames)=>{
@@ -158,9 +158,18 @@ selectionPromise.then((targetPropertiesNames) => {
     window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
 });
 
-// Manage loading.
+// Manage loading and errors.
 tablePromise.then(() => tableWrapper.classList.remove("loading"));
 selectionPromise.then(() => selectorWrapper.classList.remove("loading"));
-Promise.all([tablePromise, selectionPromise]).then(
+Promise.all([tablePromise, selectionPromise, urlPromise]).then(
     () => document.querySelector("#load-wrapper").classList.remove("loading")
+).catch(
+    (err) => {
+        document.body.innerHTML = "<strong>Oops... Something went wrong. Sorry!</strong>";
+        if(err.message){
+            console.error(err.stack, err.message);
+        } else {
+            console.error(err);
+        }
+    }
 );
