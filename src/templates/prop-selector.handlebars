@@ -4,7 +4,9 @@
     {{/each ~}}
     </div>
 <div class="prop-selector-av-wrapper">
-    <strong>Available properties: </strong>{{#each availableProperties ~}}
-        {{#unless @first}} / {{/unless}}<span class="prop-selector-av">{{this}}</span>
+    <strong>Available properties: </strong>
+    {{~#each remainingProperties ~}}
+        {{#unless @first}} / {{/unless~}}
+        <span class="prop-selector-av{{#ifIn this ../unavailableProperties}} unavailable{{/ifIn}}" >{{this}}</span>
     {{/each ~}}
 </div>

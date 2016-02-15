@@ -71,11 +71,10 @@ const taxoReq = fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).th
 // Will create the property selector widget and returns a promise of a (writable) constraint
 // on the selection.
 const selectionPromise = Promise.all([taxoReq, docLoadedPromise]).then(([taxonomy]) => {
-    const propertiesNames = tie(() => Object.keys(taxonomy.get()));
     // Create the property selector.
     const propSelector = new PropSelectorWidget(
-        propertiesNames,
-        urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS
+        taxonomy,
+        tie(urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS)
     );
     selectorWrapper.appendChild(propSelector.dom);
     return propSelector.selection;
@@ -84,13 +83,8 @@ const selectionPromise = Promise.all([taxoReq, docLoadedPromise]).then(([taxonom
 
 // Will create the table.
 const tablePromise = Promise.all(
-    [biblioReq, refsReq, taxoReq, selectionPromise, docLoadedPromise]
-).then(([biblio, references, properties, targetPropertiesNames]) => {
-
-    // Get the actual property object from the names of the target properties names.
-    const targetProperties = tie(() => targetPropertiesNames.get().map(
-        (name) => properties.prop(name).get()
-    ));
+    [biblioReq, refsReq, selectionPromise, docLoadedPromise]
+).then(([biblio, references, targetProperties]) => {
 
     // Create the reference entries.
     const refEntries = tie(() => {
@@ -104,8 +98,8 @@ const tablePromise = Promise.all(
 
 
 // Will manage url arguments updates and history states.
-const urlPromise = selectionPromise.then((targetPropertiesNames) => {
-
+const urlPromise = selectionPromise.then((targetProperties) => {
+    const targetPropertiesNames = targetProperties.alter(tps => tps.map(tp => tp.name));
     // Update url & state in function of target properties' names.
     targetPropertiesNames.onChange((propertiesNames)=>{
         const stateProp = window.history.state && window.history.state.properties;
