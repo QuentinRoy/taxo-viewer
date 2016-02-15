@@ -1,5 +1,64 @@
+import tie from "tie";
+import { CategoryTree } from "./model";
+import { parseHTML } from "./utils";
 import tableTemplate from "./templates/table.handlebars";
 import isFunction from "lodash-es/isFunction";
+import tooltip from "./tooltip";
+import tooltipTemplate from "./templates/tooltip.handlebars";
+
+const sortings = {
+    descending: (e1, e2) => e1.biblio.entryTags.year - e2.biblio.entryTags.year,
+    ascending: (e1, e2) => -sortings.descending(e1, e2)
+}
+
+export default class TableWidget {
+    constructor(targetProperties, refEntries, sorting, dom){
+        // Convert arguments to constraint.
+        [targetProperties, refEntries, sorting] = [targetProperties, refEntries, sorting].map(tie);
+
+        // Get the sorting function.
+        const sortingFunc = sorting.alter(sVal => isFunction(sVal) ? sVal : sortings[sVal]);
+
+        // Create the property tree and the table dom.
+        this.propTree = tie(() => new CategoryTree(targetProperties.get(), refEntries.get()));
+        this._tableHTML = tie(
+            () => createTableHTML("ref-table", this.propTree.get(), targetProperties.get(), sortingFunc.get())
+        );
+        this.dom = tie(dom || parseHTML("<div></div>"));
+
+        tie.liven(()=>{
+            this.dom.get().innerHTML = this._tableHTML.get();
+
+            // Associate each entry with its dom(s) and create the tooltips.
+            for(const entry of refEntries.get()){
+                entry.doms = Array.from(
+                    this.dom.get().querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`)
+                );
+                for(const dom of entry.doms){
+                    const refEntry = dom.querySelector(".ref-entry");
+                    const entryTooltip = tooltip(dom.querySelector(".ref-highlight"), {
+                        content: tooltipTemplate(entry),
+                        position: "bottom",
+                        trigger: "custom",
+                        delay: 0
+                    });
+                    refEntry.addEventListener("mouseover", () => {
+                        entry.doms.forEach(d => {
+                            d.classList.add("highlighted");
+                            entryTooltip.show();
+                        });
+                    });
+                    refEntry.addEventListener("mouseout", () => {
+                        entry.doms.forEach(d => {
+                            entryTooltip.hide();
+                            d.classList.remove("highlighted");
+                        });
+                    });
+                }
+            }
+        });
+    }
+}
 
 function getCellWidth(categoryNode){
     if(categoryNode.isLeaf){
@@ -90,7 +149,7 @@ const fillRow = (row, nb, filler=null) => {
     if(nb > 0){
         row.push(...new Array(nb).fill(filler));
     }
-} 
+}
 
 
 function createBodyRows(headerRows, sorting){
@@ -130,13 +189,8 @@ function createBodyRows(headerRows, sorting){
     return bodyRows;
 }
 
-const sortings = {
-    descending: (e1, e2) => e1.biblio.entryTags.year - e2.biblio.entryTags.year,
-    ascending: (e1, e2) => -sortings.descending(e1, e2)
-}
-
-export default function refTable(id, refEntries, properties, sorting){
-    const sortFunc = isFunction(sorting) ? sorting : sortings[sorting]; 
+function createTableHTML(id, refEntries, properties, sorting){
+    const sortFunc = isFunction(sorting) ? sorting : sortings[sorting];
     const headerRows = createHeaderRows(refEntries, properties);
     return tableTemplate({
         id: id,

@@ -3,7 +3,7 @@ import template from "./templates/prop-selector.handlebars";
 import "./templates/prop-selector.css";
 import { parseHTML } from "./utils";
 
-export default class PropertySelector {
+export default class PropertySelectorWidget {
     constructor(properties, initSelection){
         this.properties = tie(properties);
         this.selection = tie(initSelection);
