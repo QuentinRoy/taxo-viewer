@@ -92,6 +92,9 @@ function hasBottomBar(node){
 }
 
 function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, currentColNum=0, checkWidth=true){
+    if(categoryNode.isLeaf){
+        return [[{ node: categoryNode, width: 1 }]];
+    }
     const currentRow = rows[currentRowNum] = rows[currentRowNum] || [];
     fillRow(currentRow, currentColNum - getRowWidth(currentRow), { width: 1, isFiller: true });
 
@@ -194,7 +197,7 @@ function createTableHTML(id, refEntries, properties, sorting){
     const headerRows = createHeaderRows(refEntries, properties);
     return tableTemplate({
         id: id,
-        headerRows,
+        headerRows: refEntries.isLeaf ? null: headerRows,
         bodyRows: createBodyRows(headerRows, sortFunc)
     });
 }

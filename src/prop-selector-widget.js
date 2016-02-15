@@ -20,16 +20,13 @@ export default class PropertySelectorWidget {
         tie.liven(()=>{
             this.dom.innerHTML = html.get();
 
-            // At least one element.
-            if(this.selection.get().length > 1){
-                // Add event listeners on selection.
-                Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-selection"), sel => {
-                    sel.addEventListener("click", ()=> {
-                        const propName = sel.innerHTML.trim();
-                        this.selection.set(this.selection.get().filter(p => p !== propName));
-                    });
+            // Add event listeners on selection.
+            Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-selection"), sel => {
+                sel.addEventListener("click", ()=> {
+                    const propName = sel.innerHTML.trim();
+                    this.selection.set(this.selection.get().filter(p => p !== propName));
                 });
-            }
+            });
 
             // Add event listeners on available.
             Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-av"), av => {

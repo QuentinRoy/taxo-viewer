@@ -1,16 +1,18 @@
 <table id="{{id}}">
-    <thead>
-    {{~#each headerRows}}
-        <tr>
-        {{~#each this}}
-            <th colspan="{{width}}">
-                {{~#if node}}{{#if node.category}}{{node.category}}{{else}}<span class="na">NA</span>{{/if}}{{/if}}
-                {{~#if bottomBar}}<div class="hbar"></div>{{/if~}}
-            </th>
-        {{~/each}}
-        </tr>
-    {{/each}}
-    </thead>
+    {{#if headerRows}}
+        <thead>
+        {{~#each headerRows}}
+            <tr>
+            {{~#each this}}
+                <th colspan="{{width}}">
+                    {{~#if node}}{{#if node.category}}{{node.category}}{{else}}<span class="na">NA</span>{{/if}}{{/if}}
+                    {{~#if bottomBar}}<div class="hbar"></div>{{/if~}}
+                </th>
+            {{~/each}}
+            </tr>
+        {{/each}}
+        </thead>
+    {{/if}}
     <tbody>
     {{#each bodyRows}}
         <tr>
