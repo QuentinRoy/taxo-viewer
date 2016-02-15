@@ -1,25 +1,28 @@
 import yaml from "js-yaml";
-import { Entry, CategoryTree } from "./model"
-import refTable from "./ref-table";
 import "./templates/table.css";
 import bibtex from "bibtex-parse-js";
-import { parseHTML, docLoadedPromise, strReplaceAll } from "./utils";
-import tooltip from "./tooltip";
-import tooltipTemplate from "./templates/tooltip.handlebars";
 import tie from "tie";
-import PropSelector from "./prop-selector";
 import querystring from "querystring";
 import isEqual from "lodash-es/isEqual";
 import mapValues from "lodash-es/mapValues";
+import { Entry } from "./model";
+import { docLoadedPromise, strReplaceAll } from "./utils";
+import PropSelectorWidget from "./prop-selector-widget";
+import TableWidget from "./table-widget";
 import {
     sorting as DEFAULT_SORTING,
     targetProperties as DEFAULT_PROPS
 } from "./defaults";
 
+
 const normalizeProperty = (pName, p) => {
-    p = Array.isArray(p) ? { categories: p } : p ? p
-                                                 : { categories: [] };
-    return Object.assign(p, { name: pName });
+    if(!p){
+        p = { categories: [] }
+    } else if(Array.isArray(p)){
+        p = { categories: p }
+    }
+    p.name = pName;
+    return p;
 }
 const normalizeProperties = properties => mapValues(properties,
     (p, pName) => normalizeProperty(pName, p)
@@ -29,6 +32,7 @@ const normalizeRef = ref => mapValues(ref, p => Array.isArray(p) ? p : [p]);
 const biblioListToDict = bibEntries => bibEntries.reduce(
     (bibDict, e) => Object.assign(bibDict, {[e.citationKey]: e}), {}
 );
+
 
 // Retrieve the url arguments and create the decoder and encoder.
 const urlParams = querystring.parse(window.location.search.substring(1));
@@ -47,6 +51,7 @@ const fetchArgs = {
     headers: noCacheHeader
 }
 
+
 // Fetch the bibliography and parses it, and make it a constraint.
 const biblioReq = fetch("data/biblio.bib", fetchArgs).then(res => res.text()).then(
     bib => biblioListToDict(bibtex.toJSON(bib))
@@ -62,28 +67,24 @@ const taxoReq = fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).th
     ymlTxt => normalizeProperties(yaml.safeLoad(ymlTxt))
 ).then(tie);
 
+
 // Will create the property selector widget and returns a promise of a (writable) constraint
 // on the selection.
-const selectionPromise = docLoadedPromise.then(() => taxoReq).then((taxonomy) => {
-    const propertiesNames = tie(() => Object.keys(taxonomy.get()));
+const selectionPromise = Promise.all([taxoReq, docLoadedPromise]).then(([taxonomy]) => {
     // Create the property selector.
-    const propSelector = new PropSelector(
-        propertiesNames,
-        urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS
+    const propSelector = new PropSelectorWidget(
+        taxonomy,
+        tie(urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS)
     );
     selectorWrapper.appendChild(propSelector.dom);
     return propSelector.selection;
 });
 
-// Create the table.
-const tablePromise = Promise.all(
-    [biblioReq, refsReq, taxoReq, selectionPromise, docLoadedPromise]
-).then(([biblio, references, properties, targetPropertiesNames]) => {
 
-    // Get the actual property object from the names of the target properties names.
-    const targetProperties = tie(() => targetPropertiesNames.get().map(
-        (name) => properties.prop(name).get()
-    ));
+// Will create the table.
+const tablePromise = Promise.all(
+    [biblioReq, refsReq, selectionPromise, docLoadedPromise]
+).then(([biblio, references, targetProperties]) => {
 
     // Create the reference entries.
     const refEntries = tie(() => {
@@ -91,53 +92,14 @@ const tablePromise = Promise.all(
         return Object.keys(refs).map(k => new Entry(k, refs[k], bib[k]));
     });
 
-    // Create the property tree and the table dom.
-    const propTree = tie(() => new CategoryTree(targetProperties.get(), refEntries.get()));
-    const tableDOM = tie(() => parseHTML(refTable("ref-table", propTree.get(), targetProperties.get(), sorting.get()))[0]);
-
-    let cachedTableDOM = null;
-    tie.liven(()=>{
-        // Remove the previous table DOM and append the new one.
-        if(cachedTableDOM){
-            cachedTableDOM.parentNode.removeChild(cachedTableDOM);
-        }
-        tableWrapper.appendChild(tableDOM.get());
-        cachedTableDOM = tableDOM.get();
-
-        // Associate each entry with its dom(s) and create the tooltips.
-        for(const entry of refEntries.get()){
-            entry.doms = Array.from(
-                cachedTableDOM.querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`)
-            );
-            for(const dom of entry.doms){
-                const refEntry = dom.querySelector(".ref-entry");
-                const entryTooltip = tooltip(dom.querySelector(".ref-highlight"), {
-                    content: tooltipTemplate(entry),
-                    position: "bottom",
-                    trigger: "custom",
-                    delay: 0
-                });
-                refEntry.addEventListener("mouseover", () => {
-                    entry.doms.forEach(d => {
-                        d.classList.add("highlighted");
-                        entryTooltip.show();
-                    });
-                });
-                refEntry.addEventListener("mouseout", () => {
-                    entry.doms.forEach(d => {
-                        entryTooltip.hide();
-                        d.classList.remove("highlighted");
-                    });
-                });
-            }
-        }
-    });
+    // Create the table.
+    new TableWidget(targetProperties, refEntries, sorting, tableWrapper);
 });
 
 
-// Manage url arguments updates and history states.
-const urlPromise = selectionPromise.then((targetPropertiesNames) => {
-
+// Will manage url arguments updates and history states.
+const urlPromise = selectionPromise.then((targetProperties) => {
+    const targetPropertiesNames = targetProperties.alter(tps => tps.map(tp => tp.name));
     // Update url & state in function of target properties' names.
     targetPropertiesNames.onChange((propertiesNames)=>{
         const stateProp = window.history.state && window.history.state.properties;
@@ -158,14 +120,15 @@ const urlPromise = selectionPromise.then((targetPropertiesNames) => {
     window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
 });
 
-// Manage loading and errors.
+
+// Will manage loading and errors.
 tablePromise.then(() => tableWrapper.classList.remove("loading"));
 selectionPromise.then(() => selectorWrapper.classList.remove("loading"));
 Promise.all([tablePromise, selectionPromise, urlPromise]).then(
     () => document.querySelector("#load-wrapper").classList.remove("loading")
 ).catch(
     (err) => {
-        document.body.innerHTML = "<strong>Oops... Something went wrong. Sorry!</strong>";
+        document.body.innerHTML = "<div id=\"err\">Oops... Something went wrong. Sorry!</div>";
         if(err.message){
             console.error(err.stack, err.message);
         } else {

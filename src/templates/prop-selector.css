@@ -9,8 +9,11 @@
     padding: 0.1em 0.2em;
     border-radius: 0.2em;
 }
-.property-selector .prop-selector-av:hover,  .property-selector .prop-selector-selection:hover {
+.property-selector .prop-selector-av:not(.unavailable):hover,  .property-selector .prop-selector-selection:hover {
     background-color: #E6E6E6;
     transition-duration: 0s;
     cursor: pointer;
+}
+.property-selector .prop-selector-av.unavailable {
+    color: #818181;
 }
