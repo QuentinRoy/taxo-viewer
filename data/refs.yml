@@ -207,3 +207,18 @@ Wigdor2009:
     Multi-Users: Multi-Users
     Task: Meeting
     Input Sequencing: Separated
+
+Kovachev2013:
+    Topic: CDI Programming
+    Sharing: Data Sharing
+    Adaptation:
+        - Plasticity
+        - Device Adaptation
+    Architecture: Server-based Synchronization
+    Task: Video Annotation
+
+Want2002:
+    Topic: Other
+    Task:
+        - WEB
+        - Data Transfer
