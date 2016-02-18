@@ -36,8 +36,8 @@ const biblioListToDict = bibEntries => bibEntries.reduce(
 
 // Retrieve the url arguments and create the decoder and encoder.
 const urlParams = querystring.parse(window.location.search.substring(1));
-const decodePropertyUrlParam = (pParam) => strReplaceAll(pParam, "_", " ").split(',');
-const encodePropertyUrlParam = (pParam) => strReplaceAll(pParam.join(","), " ", "_");
+const decodePropertyUrlParam = (pParam="") => strReplaceAll(pParam, "_", " ").split(',');
+const encodePropertyUrlParam = (pParam=[]) => strReplaceAll(pParam.join(","), " ", "_");
 
 const sorting = tie(urlParams.sorting || DEFAULT_SORTING);
 const selectorWrapper = document.querySelector(".selector-wrapper");
@@ -70,21 +70,23 @@ const taxoReq = fetch("data/taxonomy.yml", fetchArgs).then(res => res.text()).th
 
 // Will create the property selector widget and returns a promise of a (writable) constraint
 // on the selection.
-const selectionPromise = Promise.all([taxoReq, docLoadedPromise]).then(([taxonomy]) => {
+const selectorPromise = Promise.all([taxoReq, docLoadedPromise]).then(([taxonomy]) => {
     // Create the property selector.
     const propSelector = new PropSelectorWidget(
         taxonomy,
         tie(urlParams.properties ? decodePropertyUrlParam(urlParams.properties) : DEFAULT_PROPS)
     );
     selectorWrapper.appendChild(propSelector.dom);
-    return propSelector.selection;
+    return propSelector;
 });
 
 
 // Will create the table.
 const tablePromise = Promise.all(
-    [biblioReq, refsReq, selectionPromise, docLoadedPromise]
-).then(([biblio, references, targetProperties]) => {
+    [biblioReq, refsReq, selectorPromise, docLoadedPromise]
+).then(([biblio, references, selector]) => {
+
+    const targetProperties = selector.selection;
 
     // Create the reference entries.
     const refEntries = tie(() => {
@@ -98,16 +100,18 @@ const tablePromise = Promise.all(
 
 
 // Will manage url arguments updates and history states.
-const urlPromise = selectionPromise.then((targetProperties) => {
+const urlPromise = selectorPromise.then((selector) => {
+    const targetProperties = selector.selection;
     const targetPropertiesNames = targetProperties.alter(tps => tps.map(tp => tp.name));
+
     // Update url & state in function of target properties' names.
-    targetPropertiesNames.onChange((propertiesNames)=>{
+    targetProperties.onChange((properties)=>{
         const stateProp = window.history.state && window.history.state.properties;
-        if(!isEqual(stateProp, propertiesNames)){
+        if(!isEqual(stateProp, properties)){
             // FIXME: Erases any arguments other than properties (such as sorting).
             window.history.pushState({
-                properties: propertiesNames.slice()
-            }, null, "?properties="+ encodePropertyUrlParam(propertiesNames));
+                properties: targetPropertiesNames.get().slice()
+            }, null, "?properties="+ encodePropertyUrlParam(targetPropertiesNames.get()));
         }
     });
 
@@ -117,14 +121,16 @@ const urlPromise = selectionPromise.then((targetProperties) => {
     }, null, "?properties=" + encodePropertyUrlParam(targetPropertiesNames.get()));
 
     // Update target properties when the state changes.
-    window.addEventListener("popstate", evt => targetPropertiesNames.set(evt.state.properties));
+    window.addEventListener("popstate", evt => {
+        selector.selectionNames.set(evt.state.properties.slice());
+    });
 });
 
 
 // Will manage loading and errors.
 tablePromise.then(() => tableWrapper.classList.remove("loading"));
-selectionPromise.then(() => selectorWrapper.classList.remove("loading"));
-Promise.all([tablePromise, selectionPromise, urlPromise]).then(
+selectorPromise.then(() => selectorWrapper.classList.remove("loading"));
+Promise.all([tablePromise, selectorPromise, urlPromise]).then(
     () => document.querySelector("#load-wrapper").classList.remove("loading")
 ).catch(
     (err) => {
