@@ -6,28 +6,28 @@ Ferscha2007:
 Perrault2013:
     Topic: Interaction
     Interaction Direction: Input
-    Input Type: Tactile
+    Input Type: Touch
 
 Ashbrook2008:
     Topic: Interaction
     Interaction Direction: Input
-    Input Type: Tactile
+    Input Type: Touch
 
 Butler2008:
     Topic: Interaction
     Interaction Direction: Input
-    Input Type: Tactile
+    Input Type: Touch
 
 Blasko2004:
     Topic: Interaction
     Interaction Direction: Input
-    Input Type: Tactile
+    Input Type: Touch
 
 Rekimoto2001:
     Topic: Interaction
     Interaction Direction: Input
     Input Type:
-        - Tactile
+        - Cloth
         - Hand Postures
         - Mid-Air Gestures
 
