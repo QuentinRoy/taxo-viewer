@@ -1,7 +1,7 @@
 Topic:
-    - CDI Programming
     - Interaction
     - Usages
+    - Social acceptance
     - Vision
 
 Interaction Direction:
@@ -11,63 +11,11 @@ Interaction Direction:
         - Input
         - Output
 
-Input Sequencing:
+Input Type:
     parents:
         Interaction Direction: Input
     categories:
-        - Separated
-        - Sequential
-        - Parallel
-
-Architecture:
-    parents:
-        Topic: CDI Programming
-    categories:
-        - Server-based Synchronization
-        - Instrumental Interaction
-        - Ad-Hoc
-
-Synchronization:
-    parents:
-        Topic: CDI Programming
-    categories:
-        - No Synchro
-        - Event Merging
-        - Data Synchro
-
-Adaptation:
-    parents:
-        Topic: CDI Programming
-    categories:
-        - Context Adaptation
-        - Device Adaptation
-        - No Adaptation
-
-
-Output Separation:
-    parents:
-        Interaction Direction: Output
-    categories:
-        - Focus & Context
-        - Object & Widgets
-        - Extension
-
-Device:
-    - Computer
-    - Phone
-    - TouchScreen
-    - Tablet
-    - Watch
-
-Watch Sensor:
-    parents:
-        Device: Watch
-    categories:
-        - Touch
-        - Accelerometer
-
-Task:
-
-Multi-Users:
-    - Single-User
-    - Multi-Users
+        - Mid-Air Gestures
+        - Tactile
+        - Eye tracking
+        - Hand Postures
