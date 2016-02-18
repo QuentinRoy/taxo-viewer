@@ -1,17 +1,14 @@
-Ferscha2007:
-    Topic: Interaction
-    Interaction Direction: Input
-    Input Type: Mid-Air Gestures
-
 Perrault2013:
     Topic: Interaction
     Interaction Direction: Input
     Input Type: Touch
+    Device: Watch
 
 Ashbrook2008:
     Topic: Interaction
     Interaction Direction: Input
     Input Type: Touch
+    Device: Watch
 
 Butler2008:
     Topic: Interaction
@@ -22,6 +19,7 @@ Blasko2004:
     Topic: Interaction
     Interaction Direction: Input
     Input Type: Touch
+    Device: Watch
 
 Rekimoto2001:
     Topic: Interaction
@@ -30,35 +28,44 @@ Rekimoto2001:
         - Cloth
         - Hand Postures
         - Mid-Air Gestures
+    Device:
+        - Cloth
+        - Wristband
 
 Vidal2014:
     Topic: Interaction
     Interaction Direction: [Input, Output]
     Input Type: Eye Tracking
+    Device: Glasses
 
 Cao2006:
     Topic: Interaction
     Interaction Direction: [Input, Output]
     Input Type: Pen
+    Device: Projector
 
 Roumen2015:
     Topic: Interaction
     Interaction Direction: Output
+    Device: Ring
 
 Montero2010:
     Topic: Social Acceptance
 
 Profita2013:
     Topic: Social Acceptance
+    Device: Watch
 
 Fishkin1999:
     Topic: Usages
 
 Cecchinato2015:
     Topic: Usages
+    Device: Watch
 
 Patel2015:
     Topic: Usages
+    Device: Wristband
 
 Hong2014:
     Topic: Vision

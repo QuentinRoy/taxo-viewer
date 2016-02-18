@@ -17,3 +17,29 @@ Input Type:
     categories:
         - Mid-Air Gestures
         - Touch
+        - Vocal
+
+Output Type:
+    parents:
+        Interaction Direction: Output
+    categories:
+        - Audio
+        - Visual
+        - Haptic
+
+Haptic Type:
+    parents:
+        Output Type: Haptic
+    categories:
+        - Vibration
+        - Force
+        - Thermal
+
+Device:
+    - Ring
+    - Watch
+    - Wristband
+    - Glasses
+    - Cloth
+    - Necklace
+    - Projector
