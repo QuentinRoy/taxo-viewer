@@ -29,8 +29,40 @@ Rekimoto2001:
     Input Type:
         - Tactile
         - Hand Postures
+        - Mid-Air Gestures
 
 Vidal2014:
     Topic: Interaction
     Interaction Direction: [Input, Output]
     Input Type: Eye Tracking
+
+Cao2006:
+    Topic: Interaction
+    Interaction Direction: [Input, Output]
+    Input Type: Pen
+
+Roumen2015:
+    Topic: Interaction
+    Interaction Direction: Output
+
+Montero2010:
+    Topic: Social Acceptance
+
+Profita2013:
+    Topic: Social Acceptance
+
+Fishkin1999:
+    Topic: Usages
+
+Cecchinato2015:
+    Topic: Usages
+
+Patel2015:
+    Topic: Usages
+
+Hong2014:
+    Topic: Vision
+    
+Roggen2014:
+    Topic: Vision
+    
