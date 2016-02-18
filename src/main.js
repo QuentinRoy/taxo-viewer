@@ -36,8 +36,8 @@ const biblioListToDict = bibEntries => bibEntries.reduce(
 
 // Retrieve the url arguments and create the decoder and encoder.
 const urlParams = querystring.parse(window.location.search.substring(1));
-const decodePropertyUrlParam = (pParam) => strReplaceAll(pParam, "_", " ").split(',');
-const encodePropertyUrlParam = (pParam) => strReplaceAll(pParam.join(","), " ", "_");
+const decodePropertyUrlParam = (pParam="") => strReplaceAll(pParam, "_", " ").split(',');
+const encodePropertyUrlParam = (pParam=[]) => strReplaceAll(pParam.join(","), " ", "_");
 
 const sorting = tie(urlParams.sorting || DEFAULT_SORTING);
 const selectorWrapper = document.querySelector(".selector-wrapper");
