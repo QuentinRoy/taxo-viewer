@@ -1,25 +1,22 @@
 import objValues from "lodash-es/values";
 import { objEntries } from "./utils";
-
-function removeEnclosingBraces(str){
-    return str.substring(
-        str[0] === "{" ? 1 : 0,
-        str[str.length - 1] === "}" ? str.length - 1 : str.length
-    )
-}
+import bibtexFormat from "./bibtex-str-format";
 
 export class Entry {
     constructor(id, properties, biblio){
         this.id = id;
         this.properties = properties;
         this.biblio = biblio;
-        this.authors = this.biblio.entryTags.author.split(" and ").map((author) => {
-            const [lastName, firstName] = author.split(", ").map(
-                x => removeEnclosingBraces(x).trim()
-            );
-            return { lastName, firstName };
-        });
-        this.title = removeEnclosingBraces(this.biblio.entryTags.title);
+        if(this.biblio.entryTags.author){
+            this.authors = this.biblio.entryTags.author.split(" and ").map((author) => {
+                const [lastName, firstName] = author.split(", ").map(x => bibtexFormat(x));
+                if(firstName === "Wolfgang") debugger;
+                return { lastName, firstName };
+            });
+        } else {
+            this.authors = [];
+        }
+        this.title = bibtexFormat(this.biblio.entryTags.title);
         if(this.biblio.entryTags.doi){
             if(this.biblio.entryTags.doi.startsWith("http")){
                 this.url = this.biblio.entryTags.doi;
