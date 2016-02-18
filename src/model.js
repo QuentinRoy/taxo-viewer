@@ -10,7 +10,6 @@ export class Entry {
         if(this.biblio.entryTags.author){
             this.authors = this.biblio.entryTags.author.split(" and ").map((author) => {
                 const [lastName, firstName] = author.split(", ").map(x => bibtexFormat(x));
-                if(firstName === "Wolfgang") debugger;
                 return { lastName, firstName };
             });
         } else {
