@@ -1,2 +1,2 @@
-export const targetProperties = ["Topic", "Interaction Direction", "Input Sequencing"];
+export const targetProperties = [];
 export const sorting = "ascending";
