@@ -105,13 +105,13 @@ const urlPromise = selectorPromise.then((selector) => {
     const targetPropertiesNames = targetProperties.alter(tps => tps.map(tp => tp.name));
 
     // Update url & state in function of target properties' names.
-    targetProperties.onChange((properties)=>{
+    targetPropertiesNames.onChange((propertiesNames)=>{
         const stateProp = window.history.state && window.history.state.properties;
-        if(!isEqual(stateProp, properties)){
+        if(!isEqual(stateProp, propertiesNames)){
             // FIXME: Erases any arguments other than properties (such as sorting).
             window.history.pushState({
-                properties: targetPropertiesNames.get().slice()
-            }, null, "?properties="+ encodePropertyUrlParam(targetPropertiesNames.get()));
+                properties: propertiesNames.slice()
+            }, null, "?properties="+ encodePropertyUrlParam(propertiesNames));
         }
     });
 
@@ -122,7 +122,7 @@ const urlPromise = selectorPromise.then((selector) => {
 
     // Update target properties when the state changes.
     window.addEventListener("popstate", evt => {
-        selector.selectionNames.set(evt.state.properties.slice());
+        selector.inputSelection.set(evt.state.properties.slice());
     });
 });
 

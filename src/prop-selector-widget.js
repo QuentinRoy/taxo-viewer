@@ -20,11 +20,13 @@ function propRequire(prop1, prop2, properties){
 export default class PropertySelectorWidget {
     constructor(properties, initSelection){
         this.properties = properties;
-        this.selectionNames = initSelection;
+        this.inputSelection = initSelection;
         this.propertiesNames = tie(() => Object.keys(properties.get()));
         this.selection = tie(
-            () => this.selectionNames.get().map(n => this.properties.get()[n])
+            () => this.inputSelection.get().map(n => this.properties.get()[n])
+                                           .filter(prop => !!prop)
         );
+        this.selectionNames = this.selection.alter(sel => sel.map(p => p.name));
         const remainingProperties = tie(() => {
             const selectionNames = this.selectionNames.get();
             return values(this.properties.get()).filter(
@@ -59,7 +61,7 @@ export default class PropertySelectorWidget {
                     // Also removes any property it depends on.
                     selection = selection.filter(p => !propRequire(p, property, properties));
                     // Set the new selection
-                    this.selectionNames.set(selection.map(s => s.name));
+                    this.inputSelection.set(selection.map(s => s.name));
                 });
             });
 
@@ -67,7 +69,7 @@ export default class PropertySelectorWidget {
             Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-av:not(.unavailable)"), av => {
                 av.addEventListener("click", ()=> {
                     const propName = av.innerHTML.trim();
-                    this.selectionNames.set(this.selectionNames.get().concat([propName]));
+                    this.inputSelection.set(this.selectionNames.get().concat([propName]));
                 });
             });
         });
