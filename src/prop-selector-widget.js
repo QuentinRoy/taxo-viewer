@@ -5,7 +5,7 @@ import { parseHTML } from "./utils";
 import values from "lodash-es/values";
 
 function removeProperty(propName, selection){
-    selection.splice(selection.findIndex(s => s.name === propName));
+    selection.splice(selection.findIndex(s => s.name === propName), 1);
     removeInapropriateProperties(selection);
 }
 
@@ -63,7 +63,7 @@ export default class PropertySelectorWidget {
             this.dom.innerHTML = html.get();
 
             // Add event listeners on selection.
-            Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-selection"), sel => {
+            for(const sel of this.dom.querySelectorAll(".prop-selector-selection")){
                 sel.addEventListener("click", ()=> {
                     const propName = sel.innerHTML.trim();
                     const newSelection = this.selection.get().slice();
@@ -72,15 +72,15 @@ export default class PropertySelectorWidget {
                     // Set the new selection.
                     this.inputSelection.set(newSelection.map(s => s.name));
                 });
-            });
+            }
 
             // Add event listeners on available.
-            Array.prototype.forEach.call(this.dom.querySelectorAll(".prop-selector-av:not(.unavailable)"), av => {
+            for(const av of this.dom.querySelectorAll(".prop-selector-av:not(.unavailable)")){
                 av.addEventListener("click", ()=> {
                     const propName = av.innerHTML.trim();
                     this.inputSelection.set(this.selectionNames.get().concat([propName]));
                 });
-            });
+            }
         });
     }
 }
