@@ -17,13 +17,13 @@ export class Entry {
         }
         this.title = bibtexFormat(this.biblio.entryTags.title);
         if(this.biblio.entryTags.doi){
-            if(this.biblio.entryTags.doi.startsWith("http")){
-                this.url = this.biblio.entryTags.doi;
+            if(this.biblio.entryTags.doi.startsWith("http:")){
+                this.url = bibtexFormat(this.biblio.entryTags.doi);
             } else {
-                this.url = "http://dx.doi.org/"+this.biblio.entryTags.doi;
+                this.url = "http://dx.doi.org/" + bibtexFormat(this.biblio.entryTags.doi);
             }
-        } else {
-            this.url = this.biblio.entryTags.url;
+        } else if(this.biblio.entryTags.url) {
+            this.url = bibtexFormat(this.biblio.entryTags.url);
         }
     }
 }
