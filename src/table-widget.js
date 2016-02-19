@@ -31,9 +31,7 @@ export default class TableWidget {
 
             // Associate each entry with its dom(s) and create the tooltips.
             for(const entry of refEntries.get()){
-                entry.doms = Array.from(
-                    this.dom.get().querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`)
-                );
+                entry.doms = this.dom.get().querySelectorAll(`.ref-cell[data-bib-id=${entry.id}]`);
                 for(const dom of entry.doms){
                     const refEntry = dom.querySelector(".ref-entry");
                     const entryTooltip = tooltip(dom.querySelector(".ref-highlight"), {
@@ -43,16 +41,16 @@ export default class TableWidget {
                         delay: 0
                     });
                     refEntry.addEventListener("mouseover", () => {
-                        entry.doms.forEach(d => {
+                        for(const d of entry.doms){
                             d.classList.add("highlighted");
                             entryTooltip.show();
-                        });
+                        }
                     });
                     refEntry.addEventListener("mouseout", () => {
-                        entry.doms.forEach(d => {
+                        for(const d of entry.doms){
                             entryTooltip.hide();
                             d.classList.remove("highlighted");
-                        });
+                        }
                     });
                 }
             }
