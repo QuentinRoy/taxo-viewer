@@ -50,14 +50,11 @@ export const bibtexMap = {
     "ç": /{\\c {?c}?}/,
     "Ç": /{\\c {?C}?}/,
     "å": /{\\a{?a?}}/,
-    "Å": /{\\a{?A?}}/
+    "Å": /{\\a{?A?}}/,
+    "_": /{\\_}/
 };
 
 function bibtexReplace(str){
-    // If there is no braces just return the string.
-    if(str.search(/{.+}/) < 0){
-        return str;
-    }
     for(const [replacement, search] of objEntries(bibtexMap)){
         str = str.replace(new RegExp(search.source, "g"), replacement);
     }
@@ -67,5 +64,9 @@ function bibtexReplace(str){
 const removeBraces = str => str.replace(/{|}/g, "");
 
 export default function bitexFormatStr(str){
+    // If there is no braces just return the string.
+    if(str.search(/{.+}/) < 0){
+        return str;
+    }
     return removeBraces(bibtexReplace(str)).trim();
 }
