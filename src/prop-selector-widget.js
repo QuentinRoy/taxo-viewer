@@ -5,7 +5,7 @@ import { parseHTML } from "./utils";
 import values from "lodash-es/values";
 
 function removeProperty(propName, selection){
-    selection.splice(selection.findIndex(s => s.name === propName));
+    selection.splice(selection.findIndex(s => s.name === propName), 1);
     removeInapropriateProperties(selection);
 }
 
