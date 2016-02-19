@@ -220,3 +220,11 @@ Want2002:
     Task:
         - WEB
         - Data Transfer
+
+Feiner1991:
+    Topic: Interaction
+    Interaction Direction: [Input, Output]
+    Input Sequencing: Separated
+    Output Separation: Extension
+    Task: Window Management
+    Device: AR Glasses
