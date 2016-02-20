@@ -13,9 +13,9 @@ function removeInapropriateProperties(selection){
     let checkAgain = true;
     while(checkAgain){
         checkAgain = false;
-        for(const [i, s] in selection.entries()){
+        for(const [i, s] of selection.entries()){
             // If the property has parents and none of them are in the selection.
-            if(s.parents && s.parents.every(p => selection.indexOf(p) < 0)){
+            if(s.parents && !Object.keys(s.parents).some(p => selection.some(s => s.name === p))){
                 // Remove the property.
                 selection.splice(i, 1);
                 // Specify that we will need another "round" as another property
