@@ -228,3 +228,11 @@ Feiner1991:
     Output Separation: Extension
     Task: Window Management
     Device: AR Glasses
+
+Robertson1996:
+    Topic: Interaction
+    Interaction Direction: [Input, Output]
+    Input Sequencing: Separated
+    Task: Real Estate Information Service
+    Output Separation: "Main & Secondary"
+    Device: [TV, Phone]
