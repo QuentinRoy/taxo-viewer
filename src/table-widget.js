@@ -102,11 +102,17 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
         p => p.name === directSub.name
     ).categories.concat(["undefined"]);
     // Fetch the subcells in category order.
-    let subcells = subCategories.map(
+    const subcells = subCategories.map(
         (subcat) => categoryNode.subCategories && categoryNode.subCategories[subcat]
     ).filter(c => !!c);
     // Add the subcells of unknown category (i.e. the subcells that are not already in the subcells array).
-    subcells.push(...categoryNode.getSubCategoriesList().filter(sp => subcells.indexOf(sp) < 0));
+    subcells.push(
+        ...categoryNode.getSubCategoriesList().filter(
+            sp => subcells.indexOf(sp) < 0
+        ).sort(
+            (s1, s2) => s1.category.localeCompare(s2.category)
+        )
+    );
 
     // Reapply for all subcells that are a leaf.
     if(!subcells.every(sc => sc.isEmpty() || !sc.category)){
