@@ -102,7 +102,7 @@ function createHeaderRows(categoryNode, properties, rows=[], currentRowNum=0, cu
         p => p.name === directSub.name
     ).categories.concat(["undefined"]);
     // Fetch the subcells in category order.
-    let subcells = subCategories.map(
+    const subcells = subCategories.map(
         (subcat) => categoryNode.subCategories && categoryNode.subCategories[subcat]
     ).filter(c => !!c);
     // Add the subcells of unknown category (i.e. the subcells that are not already in the subcells array).
