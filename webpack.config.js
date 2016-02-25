@@ -23,7 +23,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: "babel", include: [
+      { test: /\.js$/, loaders: ['babel?cacheDirectory'], include: [
           path.join(__dirname, "src")
         ].concat(es6modules)
       },
