@@ -88,7 +88,9 @@ Hinckley2003a:
     Multi-Users: Multi-Users
     Device: Tablet
     Output Separation: Extension
-    Task: Display Extension
+    Task:
+        - Display Extension
+        - Data Transfer
 
 Rekimoto1998:
     Topic: Interaction
