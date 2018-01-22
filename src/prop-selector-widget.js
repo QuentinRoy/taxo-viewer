@@ -1,8 +1,8 @@
-import tie from "tie";
+import tie from "tie-constraint";
 import template from "./templates/prop-selector.handlebars";
 import "./templates/prop-selector.css";
 import { parseHTML } from "./utils";
-import values from "lodash-es/values";
+import values from "lodash/values";
 
 function removeProperty(propName, selection){
     selection.splice(selection.findIndex(s => s.name === propName), 1);

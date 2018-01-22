@@ -1,10 +1,10 @@
 import yaml from "js-yaml";
 import "./templates/table.css";
 import bibtex from "bibtex-parse-js";
-import tie from "tie";
+import tie from "tie-constraint";
 import querystring from "querystring";
-import isEqual from "lodash-es/isEqual";
-import mapValues from "lodash-es/mapValues";
+import isEqual from "lodash/isEqual";
+import mapValues from "lodash/mapValues";
 import { Entry } from "./model";
 import { docLoadedPromise, strReplaceAll } from "./utils";
 import PropSelectorWidget from "./prop-selector-widget";

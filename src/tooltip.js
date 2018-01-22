@@ -1,6 +1,6 @@
-import "tooltipster/css/tooltipster.css";
+import "tooltipster/dist/css/tooltipster.main.css";
 import "./templates/tooltip.css";
-import jquery from "imports?jQuery=jquery!exports?jQuery!tooltipster"; // Patches jquery
+import jquery from "imports-loader?jQuery=jquery!exports-loader?jQuery!tooltipster"; // Patches jquery
 
 export default function tooltip(target, args){
     // The theme is defined in app.css.

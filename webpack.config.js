@@ -1,39 +1,34 @@
 var path = require("path");
 var webpack = require("webpack");
-var nodeModules = "node_modules";
-var webModules = "web_modules";
-var es6modules = ["lodash-es"].map(function(moduleName){
-  return path.join(__dirname, nodeModules, moduleName);
-}).concat(["tie"].map(function(moduleName){
-  return path.join(__dirname, webModules, moduleName);
-}));
 
 module.exports = {
-  entry: {
-    app: [ "babel-polyfill",  path.resolve(__dirname, "src/main.js") ],
-  },
-  output: {
-    path: path.join(__dirname, "assets"),
-    filename: "app.js",
-    publicPath: "assets/"
-  },
-  resolve: {
-    packageMains: ["webpack", "browser", "web", "browserify", ["jam", "main"], "jsnext:main", "main"],
-    modulesDirectories: [ "shim", webModules, nodeModules ]
-  },
-  module: {
-    loaders: [
-      { test: /\.js$/, loaders: ['babel?cacheDirectory'], include: [
-          path.join(__dirname, "src")
-        ].concat(es6modules)
-      },
-      { test: /\.handlebars$/, loader: 'handlebars-loader' },
-      { test: /\.css$/, loader: 'style?singleton!css' },
-    ],
-  },
-  plugins: [
+    entry: {
+        app: ["babel-polyfill", path.resolve(__dirname, "src/main.js")]
+    },
+    output: {
+        path: path.join(__dirname, "assets"),
+        filename: "app.js",
+        publicPath: "assets/"
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                use: ["babel-loader"],
+                include: path.join(__dirname, "src")
+            },
+            { test: /\.handlebars$/, use: "handlebars-loader" },
+            {
+                test: /\.css$/,
+                use: ["style-loader", "css-loader"]
+            }
+        ]
+    },
+    plugins: [
         new webpack.ProvidePlugin({
-            'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+            Promise: "es6-promise", // Thanks Aaron (https://gist.github.com/Couto/b29676dd1ab8714a818f#gistcomment-1584602)
+            fetch:
+                "imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch"
         })
     ]
 };
