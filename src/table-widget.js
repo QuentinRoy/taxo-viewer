@@ -1,8 +1,8 @@
-import tie from "tie";
+import tie from "tie-constraint";
 import { CategoryTree } from "./model";
 import { parseHTML } from "./utils";
 import tableTemplate from "./templates/table.handlebars";
-import isFunction from "lodash-es/isFunction";
+import isFunction from "lodash/isFunction";
 import tooltip from "./tooltip";
 import tooltipTemplate from "./templates/tooltip.handlebars";
 

@@ -1,4 +1,4 @@
-import objValues from "lodash-es/values";
+import objValues from "lodash/values";
 import { objEntries } from "./utils";
 import bibtexFormat from "./bibtex-str-format";
 
